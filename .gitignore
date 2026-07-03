@@ -1,0 +1,14 @@
+.env
+venv/
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+out_*.txt
+*.mp3
+extractions/
+transcripts/
+feed_cache/
+*.timing.json
+.DS_Store
+.claude/

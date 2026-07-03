@@ -1,0 +1,102 @@
+name: podcast-radar pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "auto = gated auto-review (Notion + PRIVATE approval draft, channel via tap); latest = new episodes not in Notion; episode = a single episode N; preview = multi-model to PRIVATE chat (no Notion, no channel)"
+        type: choice
+        options: [auto, latest, episode, preview]
+        default: latest
+      episode:
+        description: "Episode number (mode=auto/episode/preview; 1 = newest)"
+        type: string
+        default: ""
+      force:
+        description: "mode=auto only: reprocess even if the episode is already in Notion"
+        type: boolean
+        default: false
+      dry_run:
+        description: "true = Notion only, NO channel post; false = broadcast to your channel"
+        type: boolean
+        default: true
+  # Weekly gated AUTO-REVIEW (auto_review.py): two Friday attempts so a late-published
+  # episode is caught without manual action, then the schedule stops until next Friday.
+  # The reprocess safeguard in auto_review.py makes attempt 2 a cheap no-op (Notion reads
+  # only) when the episode was already processed at attempt 1 — no re-transcribe, no
+  # duplicate draft, so no runaway API charges. GitHub cron is UTC; winter (IST) shifts
+  # these to 09:00 / 11:00 IL.
+  schedule:
+    - cron: "0 7 * * 5"   # Fri 07:00 UTC = 10:00 IL (IDT) — attempt 1
+    - cron: "0 9 * * 5"   # Fri 09:00 UTC = 12:00 IL (IDT) — attempt 2 (retry), then stop
+
+concurrency:
+  group: podcast-radar-pipeline
+  cancel-in-progress: false   # never overlap; a new run waits for the current one
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60        # ~15 min/episode; room for a small backlog
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Run pipeline
+        env:
+          SHOW: ${{ vars.SHOW || 'table4' }}
+          SPEECHMATICS_API_KEY: ${{ secrets.SPEECHMATICS_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_EPISODES_DS_ID: ${{ secrets.NOTION_EPISODES_DS_ID }}
+          NOTION_ENTITIES_DS_ID: ${{ secrets.NOTION_ENTITIES_DS_ID }}
+          NOTION_EPISODES_DB_ID: ${{ secrets.NOTION_EPISODES_DB_ID }}
+          NOTION_ENTITIES_DB_ID: ${{ secrets.NOTION_ENTITIES_DB_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_ALERT_CHAT_ID: ${{ secrets.TELEGRAM_ALERT_CHAT_ID }}
+          ENABLE_TELEGRAM: "true"     # dry runs override via --no-telegram below
+          ENABLE_ALERTS: "true"       # failures always alert the private chat
+          EXTRACTION_MODEL: ${{ vars.EXTRACTION_MODEL || 'gemini-2.5-flash' }}
+        run: |
+          set -euo pipefail
+          # Weekly schedule -> AUTO-REVIEW: extract (3.5-flash) + WRITE Notion, then send
+          # the channel digest to the PRIVATE chat with Approve/Reject buttons. Nothing
+          # reaches the channel until you tap Approve (approval_poller.py releases it).
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "::notice::AUTO-REVIEW — Notion + private approval message, channel gated"
+            python auto_review.py --episode 1
+            exit 0
+          fi
+          # Manual gated auto-review: same path as the weekly schedule, fired on demand
+          # (e.g. after a new episode publishes past the cron). Reprocess-safeguarded.
+          if [ "${{ github.event.inputs.mode }}" = "auto" ]; then
+            EP="${{ github.event.inputs.episode }}"
+            FORCE=""
+            [ "${{ github.event.inputs.force }}" = "true" ] && FORCE="--force"
+            echo "::notice::AUTO-REVIEW (manual) — Notion + private approval draft, channel gated"
+            python auto_review.py --episode "${EP:-1}" $FORCE
+            exit 0
+          fi
+          # Manual preview: multi-model bake-off to the PRIVATE chat (no Notion, no channel).
+          if [ "${{ github.event.inputs.mode }}" = "preview" ]; then
+            EP="${{ github.event.inputs.episode }}"
+            echo "::notice::PREVIEW — multi-model to private chat, no Notion, no channel"
+            python friday_preview.py --episode "${EP:-1}"
+            exit 0
+          fi
+          ARGS=""
+          if [ "${{ github.event.inputs.mode }}" = "episode" ] && [ -n "${{ github.event.inputs.episode }}" ]; then
+            ARGS="--episode ${{ github.event.inputs.episode }}"
+          fi
+          # Dry run ONLY on manual dispatch with dry_run=true -> suppress channel post.
+          # Scheduled runs have no inputs -> live broadcast (intended).
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            ARGS="$ARGS --no-telegram"
+            echo "::notice::DRY RUN — Notion only, channel post suppressed"
+          fi
+          echo "Running: python main.py $ARGS"
+          python main.py $ARGS
