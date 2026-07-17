@@ -3,3 +3,5 @@ feedparser
 python-dotenv
 notion-client
 google-genai
+rapidfuzz
+numpy

@@ -118,6 +118,58 @@ class ModelSingleSourceGuardrail(unittest.TestCase):
         import config
         self.assertEqual(auto_review.MODEL, config.EXTRACTION_MODEL)
 
+    def test_resolver_model_is_config_value(self):
+        import config
+        import resolve_entities
+        self.assertEqual(resolve_entities.RESOLVE_MODEL, config.RESOLVE_MODEL)
+
+
+class ResolverFailOpenGuardrail(unittest.TestCase):
+    """The resolution pass must never break the pipeline: any failure returns the
+    entities untouched, and a show without a resolve.txt skips it entirely."""
+
+    def test_resolver_failure_returns_entities_unchanged(self):
+        import resolve_entities
+        ents = [{"name": "X", "canonical_key": "x", "type": "concept"}]
+        original = resolve_entities._candidates_for
+        had_key = os.environ.get("GOOGLE_API_KEY")
+        # A key must be present or resolve() short-circuits before the guarded block —
+        # we want to prove the try/except itself swallows a mid-flight failure.
+        os.environ["GOOGLE_API_KEY"] = "test-key-not-used"
+        resolve_entities._candidates_for = lambda *a, **k: (_ for _ in ()).throw(
+            RuntimeError("boom"))
+        try:
+            out, notes = resolve_entities.resolve(ents, {}, client=object())
+        finally:
+            resolve_entities._candidates_for = original
+            if had_key is None:
+                del os.environ["GOOGLE_API_KEY"]
+            else:
+                os.environ["GOOGLE_API_KEY"] = had_key
+        self.assertEqual(out, ents)
+        self.assertEqual(notes, [])
+
+    def test_empty_entities_short_circuit(self):
+        import resolve_entities
+        self.assertEqual(resolve_entities.resolve([], {}), ([], []))
+
+
+class TranslitIsShowDrivenGuardrail(unittest.TestCase):
+    """Romanization comes from the show config, not hardcoded tables — so a
+    Latin-script show is unaffected and a non-Latin show can dedup cross-script."""
+
+    def test_latin_names_pass_through(self):
+        import entity_match as em
+        self.assertEqual(em.translit_normalize("Nvidia"), "nvidia")
+
+    def test_romanization_uses_show_map(self):
+        import entity_match as em
+        if extract.SHOW.translit_singles:
+            # A native-script name must romanize to something Latin (fuzzy-reachable).
+            self.assertNotEqual(em.translit_normalize("אנבידיה"), "אנבידיה")
+        else:
+            self.assertEqual(em._SCRIPT_RE, None)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

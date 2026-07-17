@@ -65,6 +65,11 @@ def _fill_tokens(text):
 
 PROMPT = _fill_tokens(_load_text("prompt.txt"))
 REGEN_PROMPT = _fill_tokens(_load_text("regen.txt"))
+# Optional per-show prompts. Empty string => that stage is skipped entirely:
+#   resolve.txt  -> the entity resolution pass (resolve_entities.py)
+#   backfill.txt -> the archive dedup clustering pass (scripts/backfill_cleanup.py)
+RESOLVE_PROMPT = _fill_tokens(_load_text("resolve.txt"))
+BACKFILL_PROMPT = _fill_tokens(_load_text("backfill.txt"))
 
 if not PROMPT.strip():
     raise RuntimeError(f"shows/{SHOW_NAME}/prompt.txt is empty — the extraction prompt is required.")

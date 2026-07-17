@@ -7,6 +7,7 @@ chronologically (episode 1 first).
 
 import json
 import os
+import time
 import urllib.parse
 
 import feedparser
@@ -132,7 +133,17 @@ def _entry_meta(entry):
 def list_episodes(feed_url=None):
     """Return a list of episode_meta dicts, oldest → newest."""
     feed_url = feed_url or stt.resolve_feed_url()
-    resp = requests.get(feed_url, timeout=60)
+    # Podcast RSS is usually served behind a CDN that can hand a plain GET a stale
+    # cached copy for well over an hour after a new episode publishes (seen twice on
+    # anchor.fm: the weekly pipeline read yesterday's episode as "newest" and skipped
+    # the real new one as already-processed). A cache-busting query param + no-cache
+    # headers force a fresh fetch.
+    sep = "&" if "?" in feed_url else "?"
+    resp = requests.get(
+        f"{feed_url}{sep}_cb={int(time.time())}",
+        headers={"Cache-Control": "no-cache", "Pragma": "no-cache"},
+        timeout=60,
+    )
     resp.raise_for_status()
     feed = feedparser.parse(resp.content)
     entries = list(feed.entries)

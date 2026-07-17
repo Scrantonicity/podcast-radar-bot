@@ -62,6 +62,17 @@ class ShowConfig:
     # --- public database link (appended to every digest) ---
     db_link: str = ""
 
+    # --- entity de-duplication: romanizing the show's script ---
+    # The dedup candidate-finder compares a script-agnostic form of each name, so a
+    # native-script name and its Latin twin ("אנבידיה" / "Nvidia") land close enough
+    # for the fuzzy scorer to pair them. Supply a best-effort character map for your
+    # language — it is for RECALL, not a faithful transliteration.
+    # Leave all three empty (the default) for a Latin-script show: names are then just
+    # base-normalized, which is already correct.
+    native_script_re: str = ""            # regex detecting the script, e.g. r"[֐-׿]"
+    translit_digraphs: dict = field(default_factory=dict)  # 2-char forms, applied FIRST
+    translit_singles: dict = field(default_factory=dict)   # single chars -> latin
+
     # --- extraction contract ---
     entity_types: tuple = tuple(DEFAULT_ENTITY_TYPES)
     diarization_min_speakers: int = 2    # below this -> attribution is blanked (honest-empty)
@@ -148,6 +159,14 @@ class Strings:
     email_body_template: str = "<p>{n} entities extracted.</p>"
     email_open_notion: str = "Open in Notion"
 
+    # --- entity resolution pass (resolve_entities.py; needs shows/<name>/resolve.txt) ---
+    resolve_items_prefix: str = "Entities to resolve:"
+    resolve_preview_header: str = "<b>🔎 Resolution fixes (review):</b>"
+    resolve_note_dropped: str = "⚠️ dropped (not an entity): {name}"
+    resolve_note_merged: str = "🔗 merged: {orig} → {target} [{confidence}]"
+    resolve_note_renamed: str = "✏️ name corrected: {orig} → {new} [{confidence}]"
+    resolve_note_low_conf: str = "❓ low confidence: {name} (key={key})"
+
     # --- extraction user-turn scaffolding + meta-context repair ---
     extract_transcript_prefix: str = "Episode transcript:"
     extract_shownotes_note: str = (
@@ -162,3 +181,13 @@ class Strings:
     # --- failure alerts (private chat) ---
     alert_episode_failed_template: str = "🚨 <b>{show} — episode {num} failed</b>\n"
     alert_auto_review_failed_template: str = "🚨 <b>{show} — auto_review failed</b>\n"
+
+    # --- watchdog dead-man alerts (see RELIABILITY.md) ---
+    watchdog_empty_feed_template: str = (
+        "⚠️ {show} watchdog: the feed returned no episodes — check the RSS/pipeline."
+    )
+    watchdog_not_processed_template: str = (
+        "⚠️ {show} — episode {num} still isn't processed.\n"
+        "The weekly trigger (external scheduler → pipeline) probably didn't run.\n"
+        "Run it manually: gh workflow run pipeline.yml -f mode=auto -f episode=1"
+    )

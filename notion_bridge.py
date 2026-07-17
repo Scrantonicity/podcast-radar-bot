@@ -172,6 +172,32 @@ def ensure_context_property(client=None):
     return "added"
 
 
+def ensure_aliases_property(client=None):
+    """Add an "Aliases" rich_text property to the Entities DB if missing.
+
+    Holds newline-joined variant spellings folded into a page by the resolution pass
+    (cross-script twins, STT mis-hears, subtitle variants) so future variants resolve
+    to the canonical page instead of minting a duplicate. Returns "already" or "added";
+    raises with a UI-fallback message if the API rejects the add.
+    """
+    client = client or _client()
+    ds = _retry(client.data_sources.retrieve, data_source_id=config.NOTION_ENTITIES_DS_ID)
+    if "Aliases" in (ds.get("properties") or {}):
+        return "already"
+    try:
+        _retry(
+            client.data_sources.update,
+            data_source_id=config.NOTION_ENTITIES_DS_ID,
+            properties={"Aliases": {"rich_text": {}}},
+        )
+    except APIResponseError as e:
+        raise RuntimeError(
+            f"API rejected adding Aliases property: {e}. Add a Text property named "
+            '"Aliases" to the Entities DB in the Notion UI, then re-run.'
+        )
+    return "added"
+
+
 def ensure_transcript_url(client=None):
     """Convert the Episodes "Transcript" property to url (from file) if needed.
 
@@ -220,8 +246,14 @@ def _load_entities_index(client):
             episodes = {r["id"] for r in (props.get("Episodes", {}).get("relation") or [])}
             recommended = {o["name"] for o in (props.get("Recommended by", {}).get("multi_select") or [])}
             mentions = props.get("Mentions", {}).get("number") or 0
+            # Aliases: newline-joined variant spellings absorbed into this page. Used by
+            # the resolution pass so a known variant short-circuits to this entity.
+            aliases = [a.strip() for a in _plain(props.get("Aliases")).splitlines() if a.strip()]
             index[key] = {
                 "page_id": page["id"],
+                "name": _plain(props.get("Name")),
+                "type": (props.get("Type", {}).get("select") or {}).get("name"),
+                "aliases": aliases,
                 "episodes": episodes,
                 "recommended": recommended,
                 "mentions": mentions,
@@ -526,7 +558,8 @@ def _context_bullet(episode_number, context):
 
 def _upsert_entity(client, ent, index, episode_page_id, episode_date, ep_numbers=None,
                    has_notability=False, episode_number=None, has_context=False,
-                   has_action=False, has_sentiment=False, has_learn=False):
+                   has_action=False, has_sentiment=False, has_learn=False,
+                   has_aliases=False):
     ep_numbers = ep_numbers or {}
     key = ent["canonical_key"]
     mentioned = [m for m in (ent.get("mentioned_by") or [])]
@@ -576,6 +609,19 @@ def _upsert_entity(client, ent, index, episode_page_id, episode_date, ep_numbers
         if has_learn and ent.get("name"):
             props["Learn"] = {"url": _learn_url(ent["name"], ent.get("one_liner"),
                                                 ent.get("type"), ent.get("context"))}
+        # Aliases: record the variant spelling(s) the resolver folded into this page
+        # (the pre-correction name, and the display name when it differs from the
+        # stored Name) so future variants short-circuit here. Dedup + preserve order.
+        if has_aliases:
+            variants = [v for v in (ent.get("alias"), ent.get("name")) if v]
+            merged = list(cur.get("aliases") or [])
+            page_name = cur.get("name") or ""
+            for v in variants:
+                if v and v != page_name and v not in merged:
+                    merged.append(v)
+            if merged != (cur.get("aliases") or []):
+                props["Aliases"] = {"rich_text": _rt("\n".join(merged))}
+                cur["aliases"] = merged
         _retry(client.pages.update, page_id=cur["page_id"], properties=props)
         time.sleep(WRITE_DELAY)
         # Body: append this episode's context bullet (only the first time this
@@ -695,12 +741,13 @@ def process_episode(data, transcript_path=None, client=None):
     has_action = _has_property(client, config.NOTION_ENTITIES_DS_ID, "Action")
     has_sentiment = _has_property(client, config.NOTION_ENTITIES_DS_ID, "Sentiment")
     has_learn = _ensure_learn_property(client)
+    has_aliases = _has_property(client, config.NOTION_ENTITIES_DS_ID, "Aliases")
     entity_page_ids = []
     for ent in entities:
         pid = _upsert_entity(client, ent, index, episode_page_id, ep.get("date"),
                              ep_numbers, has_notability, ep.get("number"), has_context,
                              has_action=has_action, has_sentiment=has_sentiment,
-                             has_learn=has_learn)
+                             has_learn=has_learn, has_aliases=has_aliases)
         entity_page_ids.append(pid)
 
     # No explicit Episode -> Entities write. The relation is two-way

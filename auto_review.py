@@ -25,6 +25,7 @@ import extract
 import feed
 import notify
 import notion_bridge as nb
+import resolve_entities
 import transcribe
 from friday_preview import _stamp_returning
 from show_loader import SHOW, STRINGS
@@ -80,8 +81,21 @@ def main():
     print(f"=== extract: {args.model} ===")
     contract = extract.extract(text, episode_meta=meta, model=args.model, use_cache=True)
     entities = contract.get("entities", [])
+
+    # Resolution pass: correct STT-garbled names + fold variants onto existing DB
+    # entities BEFORE anyone (Notion, the preview) sees them. Runs on the SAME index
+    # already loaded for returning-markers. Fail-open (returns raw entities on error);
+    # a no-op for shows without a resolve.txt prompt.
+    print("=== resolve entities ===")
+    entities, notes = resolve_entities.resolve(entities, index)
+    contract["entities"] = entities
+    for n in notes:
+        print(f"  {n}")
+
     _stamp_returning(entities, index, ep_numbers, current_page_id)
     msg = notify.build_telegram_message(contract["episode"], entities)
+    if notes:
+        msg += f"\n\n{STRINGS.resolve_preview_header}\n" + "\n".join(notes[:15])
     print(f"  entities={len(entities)}  message={len(msg)} chars")
 
     # Notion FIRST (channel post suppressed); idempotent upsert.

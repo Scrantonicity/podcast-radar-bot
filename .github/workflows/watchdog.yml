@@ -1,0 +1,37 @@
+name: podcast-radar watchdog
+
+# Dead-man alert for the weekly pipeline trigger. Triggered EXTERNALLY (e.g. GCP
+# Cloud Scheduler -> workflow_dispatch) some hours after your show publishes — NOT
+# by a GitHub cron, so it doesn't share the schedule-throttling this setup works
+# around. watchdog.py pings the private alert chat only if this week's episode
+# wasn't processed by then; otherwise it stays silent. See RELIABILITY.md.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: podcast-radar-watchdog
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Dead-man check
+        env:
+          SHOW: ${{ vars.SHOW || 'table4' }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_EPISODES_DS_ID: ${{ secrets.NOTION_EPISODES_DS_ID }}
+          NOTION_ENTITIES_DS_ID: ${{ secrets.NOTION_ENTITIES_DS_ID }}
+          NOTION_EPISODES_DB_ID: ${{ secrets.NOTION_EPISODES_DB_ID }}
+          NOTION_ENTITIES_DB_ID: ${{ secrets.NOTION_ENTITIES_DB_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_ALERT_CHAT_ID: ${{ secrets.TELEGRAM_ALERT_CHAT_ID }}
+          ENABLE_ALERTS: "true"
+        run: python watchdog.py

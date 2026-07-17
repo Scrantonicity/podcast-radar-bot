@@ -38,6 +38,24 @@ SHOW = ShowConfig(
 
     db_link="https://bit.ly/tablefourdb",
 
+    # Hebrew -> Latin romanization for cross-script dedup ("אנבידיה" ~ "Nvidia").
+    # Best-effort for RECALL, not a faithful transliteration. Digraphs (geresh forms)
+    # are applied before singles.
+    native_script_re=r"[֐-׿]",
+    translit_digraphs={
+        "ג'": "j", "ז'": "zh", "צ'": "ch", "ץ'": "ch", "ד'": "dh", "ת'": "th",
+    },
+    translit_singles={
+        "א": "", "ב": "b", "ג": "g", "ד": "d", "ה": "h", "ו": "v", "ז": "z",
+        "ח": "h", "ט": "t", "י": "y", "כ": "k", "ך": "k", "ל": "l", "מ": "m",
+        "ם": "m", "נ": "n", "ן": "n", "ס": "s", "ע": "", "פ": "p", "ף": "f",
+        "צ": "ts", "ץ": "ts", "ק": "k", "ר": "r", "ש": "sh", "ת": "t",
+        "ְ": "", "ֱ": "e", "ֲ": "a", "ֳ": "o", "ִ": "i",
+        "ֵ": "e", "ֶ": "e", "ַ": "a", "ָ": "a", "ֹ": "o",
+        "ֻ": "u", "ּ": "", "ׁ": "", "ׂ": "", "׳": "",
+        "״": "",
+    },
+
     # Telegram digest layout (RTL, Hebrew headings).
     tg_sections=(
         {"heading": "🧠 מושגים לחקור:", "types": ("concept",)},

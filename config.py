@@ -50,3 +50,10 @@ EMAIL_TO = os.getenv("EMAIL_TO")
 # model change can't half-apply. friday_preview.py is the one exception: it
 # deliberately sweeps an explicit multi-model list to compare candidates.
 EXTRACTION_MODEL = os.getenv("EXTRACTION_MODEL", "gemini-2.5-flash")
+
+# Entity resolution + dedup (resolve_entities.py, scripts/backfill_cleanup.py).
+# RESOLVE_MODEL is deliberately separate from EXTRACTION_MODEL: the resolver is a
+# short, high-precision judgement call, so it can be pinned to a model known to be
+# reliable for it independently of whatever the extractor runs.
+RESOLVE_MODEL = os.getenv("RESOLVE_MODEL", "gemini-2.5-flash")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "gemini-embedding-001")

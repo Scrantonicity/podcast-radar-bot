@@ -10,10 +10,10 @@ to a structured **Notion** database, and broadcast as a short, ranked digest to 
 public.
 
 ```
-RSS feed ──▶ transcribe ──▶ extract entities ──▶ Notion (Episodes + Entities)
- (feed.py)  (Speechmatics)     (Gemini)              (notion_bridge.py)
-                                                            │
-                                                            ▼
+RSS feed ──▶ transcribe ──▶ extract entities ──▶ resolve ──▶ Notion (Episodes + Entities)
+ (feed.py)  (Speechmatics)     (Gemini)         (dedup +      (notion_bridge.py)
+                                              name-fixing)          │
+                                          (resolve_entities.py)     ▼
                                      private "Approve?" draft ──tap──▶ Telegram channel
                                             (notify.py)              (approval_poller.py)
 ```
@@ -38,6 +38,15 @@ Everything splits into two layers:
   | `config.py` | Identity, feed source, STT language, hosts, sponsors, digest layout — a `ShowConfig` object. |
   | `prompt.txt` | The extraction system prompt (the editorial brain, in your language). |
   | `strings.py` | Every user-facing string — Telegram + Notion labels, buttons, alerts. |
+
+  Plus three **optional** prompt files in the same folder; omit one and that stage
+  simply doesn't run:
+
+  | Optional file | Enables |
+  |---------------|---------|
+  | `resolve.txt` | The entity resolution pass — fixes speech-to-text-garbled names and folds variants onto existing DB entities before writing. |
+  | `regen.txt` | Meta-context repair (rewrites "who said it" contexts into "what it is"). |
+  | `backfill.txt` | The archive dedup clustering pass (`scripts/backfill_cleanup.py`). |
 
 `SHOW=<name>` in `.env` selects which show runs. The engine reads it through
 `show_loader.py` and pulls in that show's config, prompt, and strings. The schema
@@ -96,6 +105,7 @@ Then edit the three files and set `SHOW=mypodcast` in `.env`. That's it.
 | `date_format` | strftime for the header date (`"%b %d, %Y"` / `"%d.%m.%y"`). |
 | `hosts` | Your regular hosts (short names). **Single source of truth** — used by the prompt, the schema, attribution, and Notion tags. |
 | `host_ban_keys` / `sponsor_ban_keys` | Never surface hosts or ad-read sponsors as entities. |
+| `native_script_re`, `translit_singles`, `translit_digraphs` | Only for non-Latin scripts: a best-effort romanization map so a native-script name and its Latin twin ("אנבידיה"/"Nvidia") are recognised as one entity. Leave empty for Latin-script shows. |
 | `db_link` | Public link to your Notion database (appended to every digest). |
 | `tg_sections`, `tg_type_caps`, … | The digest layout: which entity types appear, section headings, per-type caps. |
 | `notion_type_labels`, `notion_learn_type_nouns` | Labels for the Notion episode-page body. |
@@ -141,6 +151,31 @@ out into many paid jobs.
 
 ---
 
+## Entity resolution (keeping the database clean)
+
+Speech-to-text garbles names, and the same thing gets said two ways ("אנבידיה" one
+week, "Nvidia" the next) — so a naive pipeline slowly fills your database with
+duplicates. Between extraction and the Notion write, `resolve_entities.py` runs a
+resolution pass that:
+
+1. finds candidate matches among existing entities (`entity_match.py`: romanized
+   comparison + fuzzy matching via rapidfuzz + cross-lingual embeddings),
+2. asks the LLM, per entity, to correct STT mis-hears to the true name, emit a clean
+   canonical key, and decide *same-as-existing* vs *new*,
+3. folds variants onto the existing page and records the old spelling in an
+   **Aliases** column, so the same variant short-circuits next time.
+
+It is **fail-open** — any error and the raw extraction flows through untouched; it can
+never break the pipeline. It only runs if your show has a `resolve.txt`. In the
+approval-gated flow the corrections are appended to the private draft so you can review
+them before approving. Models: `RESOLVE_MODEL` + `EMBEDDING_MODEL`.
+
+Already-messy archive? `scripts/backfill_cleanup.py` clusters duplicate candidates and
+LLM-confirms merges into a proposals file; `scripts/apply_backfill.py` applies the ones
+you approve (losers go to Notion trash — recoverable for 30 days).
+
+---
+
 ## Deployment
 
 - **GitHub Actions** — `.github/workflows/pipeline.yml` (manual dispatch: `auto` /
@@ -150,6 +185,13 @@ out into many paid jobs.
 - **systemd on a VPS** — `deploy/` (`podcast-radar.service` + `.timer`, plus
   `setup.sh`). Edit the schedule/timezone in the `.timer` to match your show. See
   `deploy/README.md`.
+
+**Once it matters, get off GitHub cron.** GitHub's `schedule:` is best-effort and
+silently drops runs — in production it dropped a Friday run and an episode was never
+processed. **[RELIABILITY.md](RELIABILITY.md)** walks through triggering the pipeline
+from an external scheduler (GCP Cloud Scheduler → `workflow_dispatch`, which isn't
+throttled), plus `watchdog.py` — a dead-man alert that pings your private chat if the
+week's episode wasn't processed in time, and stays silent otherwise.
 
 ---
 
@@ -172,9 +214,14 @@ invariants (and covered by `tests/test_guardrails.py`):
 - **Hosts & sponsors can't drift.** They live once in `config.py` and feed the prompt,
   schema, attribution, and Notion tags; a rename can't half-apply.
 - **One model id.** Extraction reads `config.EXTRACTION_MODEL` everywhere (never a
-  second hardcoded model).
+  second hardcoded model). The resolver has its own `RESOLVE_MODEL` on purpose.
 - **`notion_bridge.py`, not `notion_client.py`** — the latter would shadow the
   official `notion-client` SDK.
+- **The RSS feed is cache-busted.** Podcast CDNs happily serve a stale feed for an
+  hour+ after publish; a plain GET made the pipeline read yesterday's episode as
+  "newest" and skip the real one. `feed.list_episodes()` forces a fresh fetch.
+- **GitHub cron drops runs.** Don't trust `schedule:` for anything that matters —
+  see [RELIABILITY.md](RELIABILITY.md) + `watchdog.py`.
 
 ---
 
@@ -182,15 +229,17 @@ invariants (and covered by `tests/test_guardrails.py`):
 
 ```
 showkit.py            # the ShowConfig + Strings schema (field docs live here)
-show_loader.py        # picks SHOW, exposes SHOW / STRINGS / PROMPT to the engine
+show_loader.py        # picks SHOW, exposes SHOW / STRINGS / PROMPT / RESOLVE_PROMPT
 config.py             # env / secrets loader
 feed.py stt.py transcribe.py extract.py notion_bridge.py notify.py   # the engine
+entity_match.py resolve_entities.py   # entity dedup + resolution
 main.py auto_review.py approval_poller.py approve.py friday_preview.py
-run_one.py telegram_check.py                                          # entry points
+run_one.py telegram_check.py watchdog.py                              # entry points
 shows/table4/  shows/_template/      # per-podcast config + prompt + strings
-scripts/       # reusable utilities: merge_entities, rebroadcast, backfill_notion
-tests/         # test_guardrails, test_transcribe_resume, test_bridge
+scripts/       # operator utilities (see below)
+tests/         # guardrails, entity_match, resolve, transcribe_resume, bridge
 deploy/  .github/workflows/          # systemd + GitHub Actions
+RELIABILITY.md        # getting off GitHub cron: external trigger + dead-man alert
 ```
 
 ## Maintenance utilities (`scripts/`)
@@ -200,7 +249,9 @@ Not part of the weekly run — operator tools:
 | Script | Purpose |
 |--------|---------|
 | `scripts/backfill_notion.py` | Fill links / entity context / transcript links on existing rows. |
-| `scripts/merge_entities.py` | Merge duplicate entity pages (define groups in its `FIX` list). Dry-run by default. |
+| `scripts/merge_entities.py` | Merge duplicate entity pages by hand (define groups in its `FIX` list). Dry-run by default. |
+| `scripts/backfill_cleanup.py` | Cluster duplicate candidates across the whole archive + LLM-confirm merges → a proposals file. |
+| `scripts/apply_backfill.py` | Apply approved proposals (merges + renames; losers → Notion trash, 30-day recoverable). |
 | `scripts/rebroadcast.py` | Wipe the channel and re-post every episode in the current format. |
 
 ---

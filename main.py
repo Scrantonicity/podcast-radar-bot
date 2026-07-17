@@ -23,6 +23,7 @@ import extract
 import feed
 import notify
 import notion_bridge as nb
+import resolve_entities
 import transcribe
 from show_loader import SHOW, STRINGS
 
@@ -106,6 +107,15 @@ def process_one(meta, client):
         print("  extract...")
         stage = "extract"
         contract = extract.extract(text, episode_meta=meta)
+        # Resolution pass: STT-name correction + dedup-onto-existing before the write.
+        # Load the current entity index once and hand it to the resolver (fail-open;
+        # a no-op for shows without a resolve.txt prompt).
+        stage = "resolve"
+        resolve_index = nb._load_entities_index(client)
+        contract["entities"], resolve_notes = resolve_entities.resolve(
+            contract["entities"], resolve_index)
+        for n in resolve_notes:
+            print(f"    {n}")
         ents = contract["entities"]
         # Diagnostics (additive only): notability spread + diarization-gate state,
         # recomputed from the same signal the gate uses inside extract.

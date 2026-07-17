@@ -27,7 +27,10 @@ import time
 import notion_bridge as nb
 from show_loader import STRINGS
 
-EXTRACTIONS_DIR = os.path.join(os.path.dirname(__file__), "extractions")
+# extract.py writes the contract cache to extractions/ at the REPO ROOT, and this
+# script lives in scripts/ — so resolve from the parent, not from __file__'s dir.
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+EXTRACTIONS_DIR = os.path.join(ROOT, "extractions")
 TRANSCRIPT_TITLE = STRINGS.notion_transcript_title
 
 

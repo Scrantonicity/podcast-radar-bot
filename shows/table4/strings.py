@@ -44,6 +44,14 @@ STRINGS = Strings(
     email_body_template="<p>חולצו {n} ישויות.</p>",
     email_open_notion="פתח ב-Notion",
 
+    # --- entity resolution pass ---
+    resolve_items_prefix="ישויות לפתרון:",
+    resolve_preview_header="<b>🔎 תיקוני האחדה (לבדיקה):</b>",
+    resolve_note_dropped="⚠️ הושמט (לא ישות): {name}",
+    resolve_note_merged="🔗 אוחד: {orig} → {target} [{confidence}]",
+    resolve_note_renamed="✏️ שם תוקן: {orig} → {new} [{confidence}]",
+    resolve_note_low_conf="❓ ביטחון נמוך: {name} (key={key})",
+
     # --- extraction user-turn + meta-context repair ---
     extract_transcript_prefix="תמלול הפרק:",
     extract_shownotes_note=(
@@ -61,4 +69,12 @@ STRINGS = Strings(
     # --- failure alerts ---
     alert_episode_failed_template="🚨 <b>{show} — episode {num} failed</b>\n",
     alert_auto_review_failed_template="🚨 <b>{show} — auto_review נכשל</b>\n",
+
+    # --- watchdog dead-man alerts ---
+    watchdog_empty_feed_template="⚠️ {show} watchdog: הפיד לא החזיר פרקים — בדוק את ה-RSS/pipeline.",
+    watchdog_not_processed_template=(
+        "⚠️ {show} — פרק {num} עדיין לא עובד עד הצהריים (שישי).\n"
+        "הטריגר השבועי (Cloud Scheduler → pipeline) כנראה לא רץ.\n"
+        "הרצה ידנית: gh workflow run pipeline.yml -f mode=auto -f episode=1"
+    ),
 )
