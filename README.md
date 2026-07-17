@@ -1,8 +1,63 @@
-# podcast-radar-bot
+<a id="readme-top"></a>
 
-Turn any podcast into a **radar for the interesting things its hosts mention** —
-companies, stocks, books, people, concepts — automatically, every week, in any
-language.
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+
+<br />
+<div align="center">
+  <img src="images/header.gif" alt="podcast-radar-bot" width="420">
+
+  <h1>podcast-radar-bot</h1>
+
+  <p align="center">
+    Turn any podcast into a <b>radar for the interesting things its hosts mention</b> —
+    companies, stocks, books, people, concepts — automatically, every week, in any language.
+    <br />
+    <br />
+    <a href="#getting-started">Getting Started</a>
+    ·
+    <a href="#add-your-own-podcast">Add Your Own Podcast</a>
+    ·
+    <a href="https://github.com/Scrantonicity/podcast-radar-bot/issues/new">Report Bug</a>
+    ·
+    <a href="https://github.com/Scrantonicity/podcast-radar-bot/issues/new">Request Feature</a>
+  </p>
+</div>
+
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#how-its-built-engine-vs-show">How it's built: engine vs. show</a></li>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#add-your-own-podcast">Add Your Own Podcast</a></li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#podcast-observatory">Podcast Observatory</a></li>
+    <li><a href="#under-the-hood">Under The Hood</a></li>
+    <li><a href="#deployment">Deployment</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
+
+## About The Project
 
 Each new episode is transcribed, mined for the notable entities discussed, written
 to a structured **Notion** database, and broadcast as a short, ranked digest to a
@@ -18,13 +73,11 @@ RSS feed ──▶ transcribe ──▶ extract entities ──▶ resolve ─�
                                             (notify.py)              (approval_poller.py)
 ```
 
-It ships configured for a real Hebrew show (**שולחן 4 / "Table 4"**) as a working
-example. Pointing it at *your* podcast, in *any* language, is **three files and one
-env var — no engine code changes.**
+It ships configured for a fictional Hebrew demo show (**"רדאר"**) as a working,
+RTL example. Pointing it at *your* podcast, in *any* language, is **three files and
+one env var — no engine code changes.**
 
----
-
-## How it's built: engine vs. show
+### How it's built: engine vs. show
 
 Everything splits into two layers:
 
@@ -39,7 +92,7 @@ Everything splits into two layers:
   | `prompt.txt` | The extraction system prompt (the editorial brain, in your language). |
   | `strings.py` | Every user-facing string — Telegram + Notion labels, buttons, alerts. |
 
-  Plus three **optional** prompt files in the same folder; omit one and that stage
+  Plus four **optional** files in the same folder; omit one and that stage
   simply doesn't run:
 
   | Optional file | Enables |
@@ -47,25 +100,33 @@ Everything splits into two layers:
   | `resolve.txt` | The entity resolution pass — fixes speech-to-text-garbled names and folds variants onto existing DB entities before writing. |
   | `regen.txt` | Meta-context repair (rewrites "who said it" contexts into "what it is"). |
   | `backfill.txt` | The archive dedup clustering pass (`scripts/backfill_cleanup.py`). |
+  | `observatory.py` | Theme + copy for your [Podcast Observatory](#podcast-observatory) stats page. |
 
 `SHOW=<name>` in `.env` selects which show runs. The engine reads it through
 `show_loader.py` and pulls in that show's config, prompt, and strings. The schema
 for `config.py` / `strings.py` lives in `showkit.py` (well-commented defaults).
 
-Two shows are bundled: **`table4`** (the filled Hebrew example) and **`_template`**
+Two shows are bundled: **`demo`** (a filled, fictional Hebrew example) and **`_template`**
 (a blank, English, left-to-right starter).
 
----
+### Built With
 
-## Quickstart (run the bundled example)
+No framework, no build step — a plain Python project you run with `python`.
 
-```bash
-python3 -m venv venv && source venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env         # then fill in the keys (see below)
-```
+* [![Python][python-shield]][python-url] 3.12
+* [![Google Gemini][gemini-shield]][gemini-url] — entity extraction + resolution (`google-genai`)
+* [![Notion][notion-shield]][notion-url] — structured output (`notion-client`, API version pinned to `2026-03-11`)
+* [![Telegram][telegram-shield]][telegram-url] — digest delivery + the approval tap
+* [Speechmatics](https://www.speechmatics.com/) — speech-to-text, ~100 languages
+* [feedparser](https://feedparser.readthedocs.io/) · [rapidfuzz](https://github.com/rapidfuzz/RapidFuzz) · [numpy](https://numpy.org/) · [requests](https://requests.readthedocs.io/) · [python-dotenv](https://github.com/theskumar/python-dotenv)
 
-You need accounts / keys for:
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Getting Started
+
+### Prerequisites
+
+Python 3.12, and accounts / keys for:
 
 - **Speechmatics** — `SPEECHMATICS_API_KEY` (speech-to-text; ~100 languages).
 - **Google Gemini** — `GOOGLE_API_KEY` (entity extraction). Model via `EXTRACTION_MODEL`.
@@ -76,6 +137,16 @@ You need accounts / keys for:
   flow, also a private chat (`TELEGRAM_ALERT_CHAT_ID`) and your user id
   (`TELEGRAM_APPROVER_ID`).
 
+### Installation
+
+```bash
+git clone https://github.com/Scrantonicity/podcast-radar-bot.git
+cd podcast-radar-bot
+python3 -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env         # then fill in the keys (see above)
+```
+
 Preflight the Telegram wiring, then run one episode:
 
 ```bash
@@ -83,9 +154,9 @@ python telegram_check.py            # posts a test message to the channel
 python main.py --episode 1          # newest episode, end-to-end
 ```
 
----
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Add your own podcast (in 3 files)
+## Add Your Own Podcast
 
 ```bash
 cp -r shows/_template shows/mypodcast
@@ -121,18 +192,18 @@ English; translate the ones you want. Keep the `{placeholder}` tokens.
 
 Nothing else changes — the same engine, the same Notion/Telegram wiring, your show.
 
----
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Running
+## Usage
 
 `main.py` selects targets and runs the pipeline:
 
 ```bash
 python main.py                  # weekly: only episodes not yet "done" in Notion
-python main.py --episode N       # one episode (N=1 = newest)
-python main.py --backfill        # every episode oldest→newest (rate-limited, resumable)
-python main.py --cached-only     # only episodes with a cached transcript (no STT calls)
-python main.py --no-telegram     # suppress the channel post (testing)
+python main.py --episode N      # one episode (N=1 = newest)
+python main.py --backfill       # every episode oldest→newest (rate-limited, resumable)
+python main.py --cached-only    # only episodes with a cached transcript (no STT calls)
+python main.py --no-telegram    # suppress the channel post (testing)
 ```
 
 **Two ways episodes reach the channel:**
@@ -149,9 +220,38 @@ re-running an episode reuses them instead of paying for STT / the LLM again. Eve
 non-`--episode` run is capped (`MAX_EPISODES_PER_RUN`) so a feed glitch can't fan
 out into many paid jobs.
 
----
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Entity resolution (keeping the database clean)
+## Podcast Observatory
+
+Once you've run a few episodes, your `extractions/` cache holds a season's worth of
+structured data that nothing ever looks back across. The Observatory turns it into a
+single self-contained HTML page — a statistics "observatory" of *your* podcast, themed
+to *your* show.
+
+The split that makes it trustworthy: **Python computes every number, deterministically,
+offline. Your AI only picks colors and writes copy.** No LLM does arithmetic over sixty
+episodes, so the figures on the page are simply correct.
+
+```bash
+python build_observatory.py --dry-run              # which sections have data
+SHOW=demo python build_observatory.py --out dist/demo.html
+```
+
+Theme and copy live in one **optional** per-show file, `shows/<name>/observatory.py` —
+the same pattern as `config.py` and `strings.py`. Omit it and the page still builds on
+neutral dark defaults. To author one, point your AI (Claude, GPT, whatever) at
+[OBSERVATORY.md](OBSERVATORY.md): it reads your `config.py`, runs the dry-run to see
+which sections your data supports, asks you about mood and colors, and writes that one
+file. It never touches the engine.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Under The Hood
+
+<details>
+  <summary><b>Entity resolution — keeping the database clean</b></summary>
+  <br />
 
 Speech-to-text garbles names, and the same thing gets said two ways ("אנבידיה" one
 week, "Nvidia" the next) — so a naive pipeline slowly fills your database with
@@ -174,28 +274,11 @@ Already-messy archive? `scripts/backfill_cleanup.py` clusters duplicate candidat
 LLM-confirms merges into a proposals file; `scripts/apply_backfill.py` applies the ones
 you approve (losers go to Notion trash — recoverable for 30 days).
 
----
+</details>
 
-## Deployment
-
-- **GitHub Actions** — `.github/workflows/pipeline.yml` (manual dispatch: `auto` /
-  `latest` / `episode` / `preview`, plus a weekly schedule) and
-  `approve_poll.yml` (the 5-minute approval poller). Keys come from repo
-  **secrets**; `SHOW` and `EXTRACTION_MODEL` from repo **variables**.
-- **systemd on a VPS** — `deploy/` (`podcast-radar.service` + `.timer`, plus
-  `setup.sh`). Edit the schedule/timezone in the `.timer` to match your show. See
-  `deploy/README.md`.
-
-**Once it matters, get off GitHub cron.** GitHub's `schedule:` is best-effort and
-silently drops runs — in production it dropped a Friday run and an episode was never
-processed. **[RELIABILITY.md](RELIABILITY.md)** walks through triggering the pipeline
-from an external scheduler (GCP Cloud Scheduler → `workflow_dispatch`, which isn't
-throttled), plus `watchdog.py` — a dead-man alert that pings your private chat if the
-week's episode wasn't processed in time, and stays silent otherwise.
-
----
-
-## Gotchas already handled for you
+<details>
+  <summary><b>Gotchas already handled for you</b></summary>
+  <br />
 
 Hard-won lessons from running this in production, baked into the engine as
 invariants (and covered by `tests/test_guardrails.py`):
@@ -223,9 +306,11 @@ invariants (and covered by `tests/test_guardrails.py`):
 - **GitHub cron drops runs.** Don't trust `schedule:` for anything that matters —
   see [RELIABILITY.md](RELIABILITY.md) + `watchdog.py`.
 
----
+</details>
 
-## Layout
+<details>
+  <summary><b>Layout</b></summary>
+  <br />
 
 ```
 showkit.py            # the ShowConfig + Strings schema (field docs live here)
@@ -235,14 +320,20 @@ feed.py stt.py transcribe.py extract.py notion_bridge.py notify.py   # the engin
 entity_match.py resolve_entities.py   # entity dedup + resolution
 main.py auto_review.py approval_poller.py approve.py friday_preview.py
 run_one.py telegram_check.py watchdog.py                              # entry points
-shows/table4/  shows/_template/      # per-podcast config + prompt + strings
+build_observatory.py  observatory/    # the per-show statistics page
+shows/demo/    shows/_template/      # per-podcast config + prompt + strings
 scripts/       # operator utilities (see below)
 tests/         # guardrails, entity_match, resolve, transcribe_resume, bridge
 deploy/  .github/workflows/          # systemd + GitHub Actions
 RELIABILITY.md        # getting off GitHub cron: external trigger + dead-man alert
+OBSERVATORY.md        # guide for authoring your show's observatory theme
 ```
 
-## Maintenance utilities (`scripts/`)
+</details>
+
+<details>
+  <summary><b>Maintenance utilities (<code>scripts/</code>)</b></summary>
+  <br />
 
 Not part of the weekly run — operator tools:
 
@@ -254,6 +345,97 @@ Not part of the weekly run — operator tools:
 | `scripts/apply_backfill.py` | Apply approved proposals (merges + renames; losers → Notion trash, 30-day recoverable). |
 | `scripts/rebroadcast.py` | Wipe the channel and re-post every episode in the current format. |
 
----
+</details>
 
-Built with Speechmatics (STT), Google Gemini (extraction), Notion, and Telegram.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Deployment
+
+- **GitHub Actions** — `.github/workflows/pipeline.yml` (manual dispatch: `auto` /
+  `latest` / `episode` / `preview`, plus a weekly schedule) and
+  `approve_poll.yml` (the 5-minute approval poller). Keys come from repo
+  **secrets**; `SHOW` and `EXTRACTION_MODEL` from repo **variables**.
+- **systemd on a VPS** — `deploy/` (`podcast-radar.service` + `.timer`, plus
+  `setup.sh`). Edit the schedule/timezone in the `.timer` to match your show. See
+  [deploy/README.md](deploy/README.md).
+
+**Once it matters, get off GitHub cron.** GitHub's `schedule:` is best-effort and
+silently drops runs — in production it dropped a Friday run and an episode was never
+processed. **[RELIABILITY.md](RELIABILITY.md)** walks through triggering the pipeline
+from an external scheduler (GCP Cloud Scheduler → `workflow_dispatch`, which isn't
+throttled), plus `watchdog.py` — a dead-man alert that pings your private chat if the
+week's episode wasn't processed in time, and stays silent otherwise.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Roadmap
+
+- [ ] Soniox as an alternate STT backend (`SONIOX_API_KEY` is already scaffolded in `.env.example`)
+
+See the [open issues](https://github.com/Scrantonicity/podcast-radar-bot/issues) for a
+full list of proposed features and known issues.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn,
+inspire, and create. Any contributions you make are **greatly appreciated**.
+
+The one rule worth knowing up front: **the engine stays podcast-agnostic.** No show
+specific literals outside `shows/<name>/`. See [CONTRIBUTING.md](CONTRIBUTING.md) for
+the rest.
+
+If this project helped you, give it a star — thanks!
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## License
+
+Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
+
+The header GIF is © NBC/Universal and is not covered by the MIT license above.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Contact
+
+[@Scrantonicity](https://github.com/Scrantonicity) — questions and bugs are best filed
+as [an issue](https://github.com/Scrantonicity/podcast-radar-bot/issues).
+
+Project Link: [https://github.com/Scrantonicity/podcast-radar-bot](https://github.com/Scrantonicity/podcast-radar-bot)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Acknowledgments
+
+Built with [Speechmatics](https://www.speechmatics.com/) (STT),
+[Google Gemini](https://ai.google.dev/) (extraction),
+[Notion](https://developers.notion.com/), and
+[Telegram](https://core.telegram.org/bots/api).
+
+* [Best-README-Template](https://github.com/othneildrew/Best-README-Template) — this README's shape
+* [rapidfuzz](https://github.com/rapidfuzz/RapidFuzz) — fuzzy matching for entity dedup
+* [feedparser](https://feedparser.readthedocs.io/) — RSS parsing
+* [Img Shields](https://shields.io) — the badges above
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+[contributors-shield]: https://img.shields.io/github/contributors/Scrantonicity/podcast-radar-bot.svg?style=for-the-badge
+[contributors-url]: https://github.com/Scrantonicity/podcast-radar-bot/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/Scrantonicity/podcast-radar-bot.svg?style=for-the-badge
+[forks-url]: https://github.com/Scrantonicity/podcast-radar-bot/network/members
+[stars-shield]: https://img.shields.io/github/stars/Scrantonicity/podcast-radar-bot.svg?style=for-the-badge
+[stars-url]: https://github.com/Scrantonicity/podcast-radar-bot/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Scrantonicity/podcast-radar-bot.svg?style=for-the-badge
+[issues-url]: https://github.com/Scrantonicity/podcast-radar-bot/issues
+[license-shield]: https://img.shields.io/github/license/Scrantonicity/podcast-radar-bot.svg?style=for-the-badge
+[license-url]: https://github.com/Scrantonicity/podcast-radar-bot/blob/main/LICENSE
+[python-shield]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
+[python-url]: https://www.python.org/
+[gemini-shield]: https://img.shields.io/badge/Google%20Gemini-886FBF?style=for-the-badge&logo=googlegemini&logoColor=white
+[gemini-url]: https://ai.google.dev/
+[notion-shield]: https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white
+[notion-url]: https://developers.notion.com/
+[telegram-shield]: https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white
+[telegram-url]: https://core.telegram.org/bots/api
