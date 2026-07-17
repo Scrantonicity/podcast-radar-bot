@@ -1,7 +1,7 @@
 """test_guardrails.py — regression tests for the invariants baked in from hard-won
 lessons (see README → "Gotchas already handled"). All offline; no network, no keys.
 
-Run:  SHOW=table4 PYTHONPATH=. ./venv/bin/python -m unittest tests.test_guardrails -v
+Run:  SHOW=demo PYTHONPATH=. ./venv/bin/python -m unittest tests.test_guardrails -v
 """
 
 import os
@@ -11,8 +11,8 @@ from unittest.mock import MagicMock
 
 # Make the repo root importable when run from anywhere.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-# These tests assert engine mechanisms; the Table4 show gives concrete host/sponsor data.
-os.environ.setdefault("SHOW", "table4")
+# These tests assert engine mechanisms; the demo show gives concrete host/sponsor data.
+os.environ.setdefault("SHOW", "demo")
 
 import notify
 import notion_bridge as nb
@@ -94,9 +94,9 @@ class HostSponsorFilterGuardrail(unittest.TestCase):
         for host in extract.SHOW.hosts:
             self.assertIn(extract.normalize_key(host), extract.HOST_BAN_KEYS)
 
-    def test_sponsor_ban_nonempty_for_table4(self):
-        if extract.SHOW.display_name == "שולחן 4":
-            self.assertIn("eco supp", extract.SPONSOR_BAN_KEYS)
+    def test_sponsor_ban_nonempty_for_demo(self):
+        if extract.SHOW.display_name == "רדאר":
+            self.assertIn("demo brand", extract.SPONSOR_BAN_KEYS)
 
     def test_meta_context_feature_toggles_with_patterns(self):
         # Feature is ON only when the show defines patterns; OFF (no-op) otherwise.

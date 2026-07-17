@@ -25,7 +25,7 @@ jobs:
       - run: pip install -r requirements.txt
       - name: Dead-man check
         env:
-          SHOW: ${{ vars.SHOW || 'table4' }}
+          SHOW: ${{ vars.SHOW || 'demo' }}
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_EPISODES_DS_ID: ${{ secrets.NOTION_EPISODES_DS_ID }}
           NOTION_ENTITIES_DS_ID: ${{ secrets.NOTION_ENTITIES_DS_ID }}

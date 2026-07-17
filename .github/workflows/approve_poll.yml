@@ -29,7 +29,7 @@ jobs:
       - run: pip install -r requirements.txt
       - name: Poll for approvals
         env:
-          SHOW: ${{ vars.SHOW || 'table4' }}
+          SHOW: ${{ vars.SHOW || 'demo' }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TELEGRAM_ALERT_CHAT_ID: ${{ secrets.TELEGRAM_ALERT_CHAT_ID }}

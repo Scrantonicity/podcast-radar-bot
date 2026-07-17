@@ -408,9 +408,9 @@ def main():
     # front rather than spend LLM calls on a prompt-less system_instruction.
     if not BACKFILL_PROMPT.strip():
         raise SystemExit(
-            f"SHOW={os.getenv('SHOW', 'table4')!r} has no shows/<show>/backfill.txt — the "
+            f"SHOW={os.getenv('SHOW', 'demo')!r} has no shows/<show>/backfill.txt — the "
             "archive-cleanup clustering prompt. This stage is opt-in per podcast: add "
-            "that file (see shows/table4/backfill.txt) to enable it."
+            "that file (see shows/demo/backfill.txt) to enable it."
         )
 
     client = _client()

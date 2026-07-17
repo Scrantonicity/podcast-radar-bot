@@ -4,7 +4,7 @@ The engine imports from here and nowhere else for podcast/language specifics:
 
     from show_loader import SHOW, STRINGS, PROMPT, REGEN_PROMPT
 
-Which show loads is chosen by the `SHOW` env var (default: "table4"). It maps to
+Which show loads is chosen by the `SHOW` env var (default: "demo"). It maps to
 the directory `shows/<SHOW>/`, which must contain `config.py` (defines `SHOW`),
 `strings.py` (defines `STRINGS`), and `prompt.txt` (the extraction system prompt).
 An optional `regen.txt` holds the meta-context repair prompt; absent -> "".
@@ -17,7 +17,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-SHOW_NAME = os.getenv("SHOW", "table4").strip()
+SHOW_NAME = os.getenv("SHOW", "demo").strip()
 
 _SHOWS_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "shows")
 _SHOW_DIR = os.path.join(_SHOWS_ROOT, SHOW_NAME)

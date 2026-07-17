@@ -1,10 +1,10 @@
-"""shows/table4/strings.py — every user-facing string for "שולחן 4" (Hebrew)."""
+"""shows/demo/strings.py — every user-facing string for the demo show "רדאר" (Hebrew)."""
 
 from showkit import Strings
 
 STRINGS = Strings(
     # --- Telegram digest ---
-    tg_header_prefix="🎙️ שולחן 4",
+    tg_header_prefix="🎙️ רדאר",
     tg_episode_word="פרק",
     tg_deepdive_label="🔥 Deep Dive:",
     tg_listen_label="🔗 להאזנה: ",

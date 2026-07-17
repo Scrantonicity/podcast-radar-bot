@@ -6,7 +6,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-os.environ.setdefault("SHOW", "table4")
+os.environ.setdefault("SHOW", "demo")
 
 
 import entity_match as em

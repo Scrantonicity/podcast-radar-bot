@@ -30,17 +30,17 @@ EPISODE_A = {
     "entities": [
         {"name": "Palantir", "canonical_key": "palantir", "type": "company",
          "ticker": "PLTR", "notability": 4, "one_liner": "חברת ניתוח דאטה ביטחונית",
-         "context": "הוזכרה בהקשר של חוזי ביטחון", "mentioned_by": ["יונתן"],
+         "context": "הוזכרה בהקשר של חוזי ביטחון", "mentioned_by": ["יובל"],
          "link": None, "timestamp": "34:18"},
         {"name": "Warren Buffett", "canonical_key": "warren-buffett", "type": "person",
          "notability": 2, "one_liner": "משקיע אגדי", "context": "דוגמה להשקעות ערך",
-         "mentioned_by": ["גילי"], "timestamp": "12:00"},
+         "mentioned_by": ["דנה"], "timestamp": "12:00"},
         {"name": "טוקיו", "canonical_key": "tokyo", "type": "place",
          "notability": 2, "one_liner": "בירת יפן", "context": "הוזכרה כמרכז טכנולוגי",
-         "mentioned_by": ["יונתן"], "timestamp": "45:30"},
+         "mentioned_by": ["יובל"], "timestamp": "45:30"},
         {"name": "The Intelligent Investor", "canonical_key": "intelligent-investor",
          "type": "book", "notability": 5, "one_liner": "ספר השקעות קלאסי",
-         "context": "המלצת קריאה", "mentioned_by": ["גילי"], "timestamp": "13:05"},
+         "context": "המלצת קריאה", "mentioned_by": ["דנה"], "timestamp": "13:05"},
     ],
 }
 
@@ -56,11 +56,11 @@ EPISODE_B = {
     "entities": [
         {"name": "Palantir", "canonical_key": "palantir", "type": "company",
          "ticker": "PLTR", "notability": 4, "one_liner": "חברת ניתוח דאטה ביטחונית",
-         "context": "הוזכרה שוב בהקשר AI", "mentioned_by": ["גילי"],
+         "context": "הוזכרה שוב בהקשר AI", "mentioned_by": ["דנה"],
          "link": None, "timestamp": "08:00"},
         {"name": "NVIDIA", "canonical_key": "nvidia", "type": "stock",
          "ticker": "NVDA", "notability": 3, "one_liner": "יצרנית שבבי AI",
-         "context": "מובילת שוק השבבים", "mentioned_by": ["יונתן"], "timestamp": "22:10"},
+         "context": "מובילת שוק השבבים", "mentioned_by": ["יובל"], "timestamp": "22:10"},
     ],
 }
 
@@ -95,27 +95,27 @@ def test_telegram_format():
         {"name": "קיסר כל המחלות", "type": "book", "notability": 5,
          "one_liner": "ספר על הסרטן",
          "context": "קיסר כל המחלות הוא ספר על ההיסטוריה של מחקר הסרטן",
-         "mentioned_by": ["יונתן"]},
+         "mentioned_by": ["יובל"]},
         {"name": "ערפל המלחמה", "type": "concept", "notability": 4,
          "context": "ערפל המלחמה הוא מצב של אי-ודאות בתנאי קרב",
-         "mentioned_by": ["גילי", "יונתן"]},
+         "mentioned_by": ["דנה", "יובל"]},
         {"name": "NVIDIA", "type": "stock", "ticker": "NVDA", "notability": 3,
          "sentiment": "positive", "context": "מובילת שוק שבבי ה-AI",
-         "mentioned_by": ["גילי"]},
+         "mentioned_by": ["דנה"]},
         {"name": "Palantir", "type": "company", "ticker": "PLTR", "link": "https://x.co",
          "notability": 3, "sentiment": "negative",
          "context": "הוזכרה בהקשר חוזי ביטחון אמריקאים ארוכים",
-         "mentioned_by": ["יונתן", "גילי"], "is_returning": True, "earliest_episode": 42},
-        {"name": "ברני סנדרס", "type": "person", "notability": 2,
-         "context": "טען שהידע האנושי לא צריך להישלט בידי חברה פרטית אחת",
-         "mentioned_by": ["גילי"]},
+         "mentioned_by": ["יובל", "דנה"], "is_returning": True, "earliest_episode": 42},
+        {"name": "Warren Buffett", "type": "person", "notability": 2,
+         "context": "משקיע ערך שמעדיף חברות עם יתרון תחרותי ארוך טווח",
+         "mentioned_by": ["דנה"]},
         {"name": "מחקר התודעה", "type": "article", "notability": 2,
          "link": "https://art.co", "context": "סקירת מחקר חדש",
-         "mentioned_by": ["יונתן"]},
+         "mentioned_by": ["יובל"]},
         {"name": "טוקיו", "type": "place", "notability": 4, "one_liner": "בירת יפן",
-         "context": "הוזכרה כמרכז טכנולוגי", "mentioned_by": ["יונתן"]},
+         "context": "הוזכרה כמרכז טכנולוגי", "mentioned_by": ["יובל"]},
         {"name": "משהו", "type": "other", "notability": 4, "one_liner": "x", "context": "y",
-         "mentioned_by": ["גילי"]},
+         "mentioned_by": ["דנה"]},
     ]
     msg = notify.build_telegram_message(episode, entities)
     flat = _strip_iso(msg)
@@ -125,8 +125,8 @@ def test_telegram_format():
 
     # Header: single line, episode + headline + DD.MM.YY date, no separate title line.
     header = _strip_iso(lines[0])
-    checks.append(("TG: header single line 🎙️ שולחן 4 | פרק 60 + headline + DD.MM.YY",
-                   header.startswith("🎙️ שולחן 4 | פרק 60")
+    checks.append(("TG: header single line 🎙️ רדאר | פרק 60 + headline + DD.MM.YY",
+                   header.startswith("🎙️ רדאר | פרק 60")
                    and "פלאנטיר, סרטן והכסף הפרטי" in header
                    and "19.06.26" in header and "2026" not in header))
     checks.append(("TG: headline not duplicated (only in header)",
@@ -161,7 +161,7 @@ def test_telegram_format():
                    "טוקיו" not in msg and "משהו" not in msg))
 
     # Attribution: two distinct speakers -> shown.
-    checks.append(("TG: two speakers -> attribution shown", "(יונתן, גילי)" in msg))
+    checks.append(("TG: two speakers -> attribution shown", "(יובל, דנה)" in msg))
 
     # Returning marker keeps the episode number (isolated).
     checks.append(("TG: returning marker '🔁 פרק 42'", "🔁 פרק 42" in flat))
@@ -189,23 +189,23 @@ def test_telegram_format():
     checks.append(("TG: platform footer 🔗 (YouTube+Spotify, no Apple)",
                    "🔗 להאזנה:" in msg and ">YouTube</a>" in msg
                    and ">Spotify</a>" in msg and ">Apple</a>" not in msg))
-    checks.append(("TG: exactly one bit.ly DB link",
-                   msg.count("https://bit.ly/tablefourdb") == 1))
+    checks.append(("TG: exactly one DB link",
+                   msg.count("https://example.com/db") == 1))
     nonempty = [ln for ln in lines if ln.strip()]
     checks.append(("TG: DB link is the last line",
-                   nonempty[-1].endswith("https://bit.ly/tablefourdb")))
+                   nonempty[-1].endswith("https://example.com/db")))
 
     # Single-speaker episode: attribution should be DROPPED.
     solo_ep = {"number": 61, "date": "2026-06-26", "headline": "פרק יחיד"}
     solo_ents = [
         {"name": "TSMC", "type": "stock", "ticker": "TSM", "notability": 5,
-         "context": "מובילה גלובלית בייצור שבבים מתקדמים", "mentioned_by": ["גילי"]},
+         "context": "מובילה גלובלית בייצור שבבים מתקדמים", "mentioned_by": ["דנה"]},
         {"name": "Intel", "type": "stock", "ticker": "INTC", "notability": 3,
-         "context": "מנסה להדביק את הפער", "mentioned_by": ["גילי"]},
+         "context": "מנסה להדביק את הפער", "mentioned_by": ["דנה"]},
     ]
     solo_msg = notify.build_telegram_message(solo_ep, solo_ents)
     checks.append(("TG: single speaker -> attribution dropped",
-                   "(גילי)" not in solo_msg))
+                   "(דנה)" not in solo_msg))
 
     print("== Telegram format checks ==")
     ok = True
@@ -281,7 +281,7 @@ def main():
         checks.append(("Palantir linked to both episodes",
                        {res_a["episode_page_id"], res_b["episode_page_id"]} <= eps))
         rec = _multi(p, "Recommended by")
-        checks.append(("Palantir recommended by both hosts", {"יונתן", "גילי"} <= rec))
+        checks.append(("Palantir recommended by both hosts", {"יובל", "דנה"} <= rec))
 
     # Episode pages done + body populated.
     for label, res in (("A", res_a), ("B", res_b)):

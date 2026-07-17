@@ -12,7 +12,7 @@ Plus: non-entity dropped, alias carried, low-confidence surfaced.
 import os
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-os.environ.setdefault("SHOW", "table4")
+os.environ.setdefault("SHOW", "demo")
 
 
 import os

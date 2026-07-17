@@ -1,16 +1,19 @@
-"""shows/table4/config.py — the real "שולחן 4" (Table 4) show config.
+"""shows/demo/config.py — a fictional Hebrew demo show ("רדאר").
 
-This is the working EXAMPLE: a Hebrew, RTL podcast. Copy shows/_template/ for a
-new show; use this as a reference for a fully-filled config.
+This is the working EXAMPLE: a Hebrew, RTL podcast, fully invented for demonstration
+(the hosts, sponsors, and feed are not real). Copy shows/_template/ for a new show;
+use this as a reference for a fully-filled config.
 """
 
 from showkit import ShowConfig
 
 SHOW = ShowConfig(
-    display_name="שולחן 4",
+    display_name="רדאר",
 
-    # Feed: Apple/iTunes podcast id -> RSS resolved via the iTunes lookup.
-    feed_apple_id="1823006955",
+    # Feed: point at your show. Apple/iTunes id -> RSS via the iTunes lookup, OR a
+    # direct RSS url. Placeholders here — this demo show is not a real feed.
+    feed_apple_id=None,
+    feed_rss_url="https://example.com/feed.xml",
 
     # Language / STT
     stt_language="he",
@@ -20,23 +23,20 @@ SHOW = ShowConfig(
     date_format="%d.%m.%y",
 
     # Hosts — SINGLE SOURCE OF TRUTH (short forms). The prompt names them too.
-    hosts=("גילי", "ערן", "יהונתן"),
+    hosts=("דנה", "נועם", "יובל"),
     guest_label="אורח",
-    # Every script/spelling a host might leak under (incl. the old יונתן spelling).
+    # Every script/spelling a host might leak under (lowercase, all spellings).
     host_ban_keys=frozenset({
-        "gili biman", "gili", "eran gefen", "eran", "yonatan adiri", "yonatan",
-        "גילי בימן", "גילי", "ערן גפן", "ערן", "יונתן אדירי", "יונתן",
-        "יהונתן אדירי", "יהונתן",
+        "dana", "noam", "yuval",
+        "דנה", "נועם", "יובל",
     }),
-    # Paid sponsors / ad-reads — dropped like listeners (never editorial entities).
+    # Paid sponsors / ad-reads — never treated as editorial entities.
     sponsor_ban_keys=frozenset({
-        "eco supp", "ecosupp", "eco sup", "אקו סאפ", "אקוסאפ",
-        "cover", "קאבר",
-        "kiara naturals", "kiara", "קיארה naturals", "קיארה",
-        "green invoice", "חשבונית ירוקה",
+        "demo brand", "מותג לדוגמה", "חברת דוגמה",
     }),
 
-    db_link="https://bit.ly/tablefourdb",
+    # Public link to your Notion entities DB, shown in the digest footer.
+    db_link="https://example.com/db",
 
     # Hebrew -> Latin romanization for cross-script dedup ("אנבידיה" ~ "Nvidia").
     # Best-effort for RECALL, not a faithful transliteration. Digraphs (geresh forms)
