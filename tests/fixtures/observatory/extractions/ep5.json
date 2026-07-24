@@ -1,0 +1,156 @@
+{
+  "episode": {
+    "number": 5,
+    "title": "הפרק החמישי",
+    "headline": "לייצר קרוב לבית",
+    "date": "2025-02-03",
+    "duration": "31:20",
+    "audio_url": "https://example.com/audio/ep5.mp3",
+    "youtube_url": "https://example.com/yt/ep5",
+    "spotify_url": null,
+    "apple_url": "https://example.com/apple/ep5",
+    "guid": "ep5"
+  },
+  "summary": "סיכום לדוגמה לפרק 5. הכול מומצא לצורך בדיקות.",
+  "headline": "לייצר קרוב לבית",
+  "entities": [
+    {
+      "name": "ישראל",
+      "canonical_key": "israel",
+      "type": "place",
+      "notability": 4,
+      "ticker": null,
+      "one_liner": "שוב, מרכז צפוף",
+      "context": "ישראל עלה בשיחה על שוב, מרכז צפוף",
+      "mentioned_by": [
+        "אורח",
+        "דנה"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Explore",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "ג׳ורדן אוקafor",
+      "canonical_key": "jordan okafor",
+      "type": "person",
+      "notability": 3,
+      "ticker": null,
+      "one_liner": "יזם תשתיות",
+      "context": "ג׳ורדן אוקafor עלה בשיחה על יזם תשתיות",
+      "mentioned_by": [
+        "אורח"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Follow",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "ריטה מוראלס",
+      "canonical_key": "rita morales",
+      "type": "person",
+      "notability": 2,
+      "ticker": null,
+      "one_liner": "עיתונאית כלכלית",
+      "context": "ריטה מוראלס עלה בשיחה על עיתונאית כלכלית",
+      "mentioned_by": [
+        "דנה"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Follow",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "סטארלייט",
+      "canonical_key": "starlight systems",
+      "type": "company",
+      "notability": 3,
+      "ticker": "STLT",
+      "one_liner": "תקשורת לוויינית",
+      "context": "סטארלייט עלה בשיחה על תקשורת לוויינית",
+      "mentioned_by": [
+        "אורח",
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Watch",
+      "sentiment": "positive",
+      "is_tool": false
+    },
+    {
+      "name": "שרשרת אספקה קצרה",
+      "canonical_key": "short supply chain",
+      "type": "concept",
+      "notability": 3,
+      "ticker": null,
+      "one_liner": "לייצר קרוב לבית",
+      "context": "שרשרת אספקה קצרה עלה בשיחה על לייצר קרוב לבית",
+      "mentioned_by": [
+        "אורח"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "כשל התיאום",
+      "canonical_key": "coordination failure",
+      "type": "concept",
+      "notability": 2,
+      "ticker": null,
+      "one_liner": "כולם רוצים, אף אחד לא זז",
+      "context": "כשל התיאום עלה בשיחה על כולם רוצים, אף אחד ל",
+      "mentioned_by": [
+        "דנה"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "הדרך הארוכה הביתה",
+      "canonical_key": "the long way home",
+      "type": "book",
+      "notability": 3,
+      "ticker": null,
+      "one_liner": "מסע ומסחר",
+      "context": "הדרך הארוכה הביתה עלה בשיחה על מסע ומסחר",
+      "mentioned_by": [
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Read",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "מי מחזיק את הכבלים",
+      "canonical_key": "who holds the cables",
+      "type": "article",
+      "notability": 3,
+      "ticker": null,
+      "one_liner": "על תשתית האינטרנט הפיזית",
+      "context": "מי מחזיק את הכבלים עלה בשיחה על על תשתית האינטרנט הפ",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": "https://example.com/article2",
+      "timestamp": null,
+      "action": "Read",
+      "sentiment": "neutral",
+      "is_tool": false
+    }
+  ]
+}

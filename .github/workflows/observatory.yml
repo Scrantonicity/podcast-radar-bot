@@ -1,0 +1,100 @@
+name: observatory
+
+# Builds the statistics page end to end against the synthetic fixture archive and
+# runs the observatory tests. Hermetic: no network, no API keys, no Notion, no
+# Telegram — so unlike the pipeline workflow this one is safe to run on every push.
+#
+# This is the only thing standing between the template and quiet rot. The template
+# was forked from another repo and there is no sync path back: if a rename or a
+# reshape breaks the page, nothing else in CI would notice, because the page is only
+# ever built by hand.
+
+on:
+  push:
+    paths:
+      - "observatory/**"
+      - "build_observatory.py"
+      - "showkit.py"
+      - "show_loader.py"
+      - "shows/**"
+      - "tests/test_observatory.py"
+      - "tests/fixtures/observatory/**"
+      - ".github/workflows/observatory.yml"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SHOW: demo
+      PYTHONPATH: .
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # The build itself needs no third-party packages — it reads json and writes
+      # html. show_loader imports python-dotenv, and that's the lot.
+      - name: Install
+        run: pip install python-dotenv
+
+      - name: Vendored assets are what they claim to be
+        working-directory: observatory/vendor
+        run: shasum -a 256 -c SHA256SUMS
+
+      - name: Tests
+        run: python -m unittest tests.test_observatory -v
+
+      - name: Build the demo show (Hebrew, RTL, themed)
+        run: |
+          python build_observatory.py \
+            --extractions tests/fixtures/observatory/extractions \
+            --transcripts tests/fixtures/observatory/transcripts \
+            --out dist/demo_observatory.html
+
+      - name: Build the starter show (English, LTR, default theme)
+        env:
+          SHOW: _template
+        run: |
+          python build_observatory.py \
+            --extractions tests/fixtures/observatory/extractions \
+            --transcripts tests/fixtures/observatory/transcripts \
+            --out dist/template_observatory.html
+
+      - name: A show with no observatory.py still builds
+        run: |
+          mv shows/demo/observatory.py /tmp/observatory.py.bak
+          python build_observatory.py \
+            --extractions tests/fixtures/observatory/extractions \
+            --out dist/defaults_observatory.html
+          mv /tmp/observatory.py.bak shows/demo/observatory.py
+
+      - name: The pages are self-contained and complete
+        run: |
+          python - <<'EOF'
+          import re, sys, pathlib
+          for p in sorted(pathlib.Path("dist").glob("*.html")):
+              html = p.read_text(encoding="utf-8")
+              kb = len(html.encode()) // 1024
+              # An unfilled placeholder means a rename slipped past the substitution.
+              left = re.findall(r"__[A-Z_]+__", html)
+              # No fetch at view time: the whole point of the artifact.
+              external = re.findall(r'(?:src|href)="https?://[^"]+"', html)
+              external = [e for e in external if "fonts.googleapis" not in e
+                          and "fonts.gstatic" not in e]
+              problems = []
+              if left: problems.append(f"unfilled placeholders: {sorted(set(left))}")
+              if external: problems.append(f"external refs: {external[:3]}")
+              if kb < 300: problems.append(f"suspiciously small ({kb} KB) — vendor missing?")
+              print(f"{p.name}: {kb} KB {'FAIL ' + '; '.join(problems) if problems else 'ok'}")
+              if problems: sys.exit(1)
+          EOF
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: observatory-pages
+          path: dist/*.html
+          retention-days: 7

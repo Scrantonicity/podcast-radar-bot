@@ -53,6 +53,16 @@ _strings_mod = importlib.import_module(f"shows.{SHOW_NAME}.strings")
 SHOW = _config_mod.SHOW
 STRINGS = _strings_mod.STRINGS
 
+# Optional: the observatory's theme + copy (see OBSERVATORY.md). Absent -> None,
+# and observatory/defaults.py derives a neutral one from SHOW. Only
+# build_observatory.py reads this; the pipeline never does.
+# Gate on the file, not on ModuleNotFoundError: a show's observatory.py that itself
+# imports something missing must raise, not silently fall back to the default theme.
+if os.path.exists(os.path.join(_SHOW_DIR, "observatory.py")):
+    OBSERVATORY = importlib.import_module(f"shows.{SHOW_NAME}.observatory").OBSERVATORY
+else:
+    OBSERVATORY = None
+
 
 def _fill_tokens(text):
     """Inject a few config values into a prompt via {{TOKEN}} markers, so hosts stay

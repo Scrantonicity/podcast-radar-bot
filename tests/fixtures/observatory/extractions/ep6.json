@@ -1,0 +1,227 @@
+{
+  "episode": {
+    "number": 6,
+    "title": "הפרק השישי",
+    "headline": "הפרק הארוך של העונה",
+    "date": "2025-02-10",
+    "duration": "2:03:45",
+    "audio_url": "https://example.com/audio/ep6.mp3",
+    "youtube_url": "https://example.com/yt/ep6",
+    "spotify_url": null,
+    "apple_url": "https://example.com/apple/ep6",
+    "guid": "ep6"
+  },
+  "summary": "סיכום לדוגמה לפרק 6. הכול מומצא לצורך בדיקות.",
+  "headline": "הפרק הארוך של העונה",
+  "entities": [
+    {
+      "name": "ארצות הברית",
+      "canonical_key": "united states",
+      "type": "place",
+      "notability": 5,
+      "ticker": null,
+      "one_liner": "הקצב",
+      "context": "ארצות הברית עלה בשיחה על הקצב",
+      "mentioned_by": [
+        "דנה",
+        "נועם",
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Explore",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "סין",
+      "canonical_key": "china",
+      "type": "place",
+      "notability": 5,
+      "ticker": null,
+      "one_liner": "השחקן השני",
+      "context": "סין עלה בשיחה על השחקן השני",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Explore",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "יפן",
+      "canonical_key": "japan",
+      "type": "place",
+      "notability": 3,
+      "ticker": null,
+      "one_liner": "מעבדה דמוגרפית",
+      "context": "יפן עלה בשיחה על מעבדה דמוגרפית",
+      "mentioned_by": [
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Explore",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "שרה חן",
+      "canonical_key": "sarah chen",
+      "type": "person",
+      "notability": 5,
+      "ticker": null,
+      "one_liner": "חוקרת מדיניות חישוב",
+      "context": "שרה חן עלה בשיחה על חוקרת מדיניות חישוב",
+      "mentioned_by": [
+        "דנה",
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Follow",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "טום בריידי־הול",
+      "canonical_key": "tom brady-hall",
+      "type": "person",
+      "notability": 2,
+      "ticker": null,
+      "one_liner": "פרשן ותיק",
+      "context": "טום בריידי־הול עלה בשיחה על פרשן ותיק",
+      "mentioned_by": [
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Follow",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "נורת׳ווינד",
+      "canonical_key": "northwind",
+      "type": "company",
+      "notability": 5,
+      "ticker": "NWND",
+      "one_liner": "תשתית רשת",
+      "context": "נורת׳ווינד עלה בשיחה על תשתית רשת",
+      "mentioned_by": [
+        "נועם",
+        "דנה"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Watch",
+      "sentiment": "positive",
+      "is_tool": false
+    },
+    {
+      "name": "קוואנטה",
+      "canonical_key": "quanta works",
+      "type": "company",
+      "notability": 2,
+      "ticker": "QNTA",
+      "one_liner": "קבלן משנה",
+      "context": "קוואנטה עלה בשיחה על קבלן משנה",
+      "mentioned_by": [
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Watch",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "ריבונות חישובית",
+      "canonical_key": "compute sovereignty",
+      "type": "concept",
+      "notability": 5,
+      "ticker": null,
+      "one_liner": "מי שולט על השבבים",
+      "context": "ריבונות חישובית עלה בשיחה על מי שולט על השבבים",
+      "mentioned_by": [
+        "דנה",
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "מלכודת הבינוניות",
+      "canonical_key": "mediocrity trap",
+      "type": "concept",
+      "notability": 2,
+      "ticker": null,
+      "one_liner": "מספיק טוב זה אויב של טוב",
+      "context": "מלכודת הבינוניות עלה בשיחה על מספיק טוב זה אויב של",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "אפקט ההילה",
+      "canonical_key": "halo effect",
+      "type": "concept",
+      "notability": 1,
+      "ticker": null,
+      "one_liner": "מותג טוב מכסה על מוצר בינוני",
+      "context": "אפקט ההילה עלה בשיחה על מותג טוב מכסה על מוצ",
+      "mentioned_by": [
+        "דנה"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "ספר החול השני",
+      "canonical_key": "the second book of sand",
+      "type": "book",
+      "notability": 2,
+      "ticker": null,
+      "one_liner": "אוסף סיפורים",
+      "context": "ספר החול השני עלה בשיחה על אוסף סיפורים",
+      "mentioned_by": [
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Read",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "מדד ה־T7",
+      "canonical_key": "t7 index",
+      "type": "stock",
+      "notability": 5,
+      "ticker": "T7X",
+      "one_liner": "סל שבע הגדולות",
+      "context": "מדד ה־T7 עלה בשיחה על סל שבע הגדולות",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Watch",
+      "sentiment": "positive",
+      "is_tool": false
+    }
+  ]
+}

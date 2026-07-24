@@ -1,0 +1,192 @@
+{
+  "episode": {
+    "number": 1,
+    "title": "הפרק הראשון",
+    "headline": "ריבונות חישובית מתחילה בבית",
+    "date": "2025-01-06",
+    "duration": "1:12:30",
+    "audio_url": "https://example.com/audio/ep1.mp3",
+    "youtube_url": "https://example.com/yt/ep1",
+    "spotify_url": null,
+    "apple_url": "https://example.com/apple/ep1",
+    "guid": "ep1"
+  },
+  "summary": "סיכום לדוגמה לפרק 1. הכול מומצא לצורך בדיקות.",
+  "headline": "ריבונות חישובית מתחילה בבית",
+  "entities": [
+    {
+      "name": "ישראל",
+      "canonical_key": "israel",
+      "type": "place",
+      "notability": 5,
+      "ticker": null,
+      "one_liner": "מרכז טכנולוגי קטן וצפוף",
+      "context": "ישראל עלה בשיחה על מרכז טכנולוגי קטן וצ",
+      "mentioned_by": [
+        "דנה",
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": "04:12",
+      "action": "Explore",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "סין",
+      "canonical_key": "china",
+      "type": "place",
+      "notability": 5,
+      "ticker": null,
+      "one_liner": "השחקן השני בכל שיחה על שרשראות אספקה",
+      "context": "סין עלה בשיחה על השחקן השני בכל שיחה ",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": "12:40",
+      "action": "Explore",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "ארצות הברית",
+      "canonical_key": "united states",
+      "type": "place",
+      "notability": 4,
+      "ticker": null,
+      "one_liner": "עדיין קובעת את הקצב",
+      "context": "ארצות הברית עלה בשיחה על עדיין קובעת את הקצב",
+      "mentioned_by": [
+        "דנה",
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Explore",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "שרה חן",
+      "canonical_key": "sarah chen",
+      "type": "person",
+      "notability": 5,
+      "ticker": null,
+      "one_liner": "חוקרת מדיניות חישוב",
+      "context": "שרה חן עלה בשיחה על חוקרת מדיניות חישוב",
+      "mentioned_by": [
+        "דנה"
+      ],
+      "link": "https://example.com/sarah",
+      "timestamp": "06:00",
+      "action": "Follow",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "נורת׳ווינד",
+      "canonical_key": "northwind",
+      "type": "company",
+      "notability": 5,
+      "ticker": "NWND",
+      "one_liner": "יצרנית תשתית רשת",
+      "context": "נורת׳ווינד עלה בשיחה על יצרנית תשתית רשת",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": "18:20",
+      "action": "Watch",
+      "sentiment": "positive",
+      "is_tool": false
+    },
+    {
+      "name": "ריבונות חישובית",
+      "canonical_key": "compute sovereignty",
+      "type": "concept",
+      "notability": 5,
+      "ticker": null,
+      "one_liner": "מי שולט על שבבי החישוב שלך",
+      "context": "ריבונות חישובית עלה בשיחה על מי שולט על שבבי החיש",
+      "mentioned_by": [
+        "דנה",
+        "נועם",
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "המפעל השקט",
+      "canonical_key": "the quiet factory",
+      "type": "book",
+      "notability": 5,
+      "ticker": null,
+      "one_liner": "איך תעשייה נבנית בלי רעש",
+      "context": "המפעל השקט עלה בשיחה על איך תעשייה נבנית בלי",
+      "mentioned_by": [
+        "יובל"
+      ],
+      "link": "https://example.com/book1",
+      "timestamp": null,
+      "action": "Read",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "תמחור דינמי",
+      "canonical_key": "dynamic pricing",
+      "type": "concept",
+      "notability": 4,
+      "ticker": null,
+      "one_liner": "המחיר משתנה לפי מי אתה",
+      "context": "תמחור דינמי עלה בשיחה על המחיר משתנה לפי מי א",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "מדד ה־T7",
+      "canonical_key": "t7 index",
+      "type": "stock",
+      "notability": 5,
+      "ticker": "T7X",
+      "one_liner": "סל שבע החברות הגדולות",
+      "context": "מדד ה־T7 עלה בשיחה על סל שבע החברות הגדולו",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Watch",
+      "sentiment": "positive",
+      "is_tool": false
+    },
+    {
+      "name": "כלי הניתוח שלנו",
+      "canonical_key": "our analysis tool",
+      "type": "other",
+      "notability": 2,
+      "ticker": null,
+      "one_liner": "סקריפט קטן שדנה כתבה",
+      "context": "כלי הניתוח שלנו עלה בשיחה על סקריפט קטן שדנה כתבה",
+      "mentioned_by": [
+        "דנה"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Tool",
+      "sentiment": "neutral",
+      "is_tool": true
+    }
+  ]
+}

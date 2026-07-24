@@ -1,0 +1,190 @@
+{
+  "episode": {
+    "number": 2,
+    "title": "הפרק השני",
+    "headline": "הקשב הוא המוצר",
+    "date": "2025-01-13",
+    "duration": "58:10",
+    "audio_url": "https://example.com/audio/ep2.mp3",
+    "youtube_url": "https://example.com/yt/ep2",
+    "spotify_url": null,
+    "apple_url": "https://example.com/apple/ep2",
+    "guid": "ep2"
+  },
+  "summary": "סיכום לדוגמה לפרק 2. הכול מומצא לצורך בדיקות.",
+  "headline": "הקשב הוא המוצר",
+  "entities": [
+    {
+      "name": "יפן",
+      "canonical_key": "japan",
+      "type": "place",
+      "notability": 3,
+      "ticker": null,
+      "one_liner": "מעבדה דמוגרפית לכל העולם",
+      "context": "יפן עלה בשיחה על מעבדה דמוגרפית לכל ה",
+      "mentioned_by": [
+        "דנה"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Explore",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "הודו",
+      "canonical_key": "india",
+      "type": "place",
+      "notability": 3,
+      "ticker": null,
+      "one_liner": "הצמיחה הכי מדוברת בעשור",
+      "context": "הודו עלה בשיחה על הצמיחה הכי מדוברת בע",
+      "mentioned_by": [
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Explore",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "מרקו דל־רוסו",
+      "canonical_key": "marco del rosso",
+      "type": "person",
+      "notability": 4,
+      "ticker": null,
+      "one_liner": "משקיע ותיק וציניקן",
+      "context": "מרקו דל־רוסו עלה בשיחה על משקיע ותיק וציניקן",
+      "mentioned_by": [
+        "יובל"
+      ],
+      "link": "https://example.com/marco",
+      "timestamp": null,
+      "action": "Follow",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "אורביט לאבס",
+      "canonical_key": "orbit labs",
+      "type": "company",
+      "notability": 4,
+      "ticker": "ORBT",
+      "one_liner": "לוויינים קטנים במחיר נמוך",
+      "context": "אורביט לאבס עלה בשיחה על לוויינים קטנים במחיר",
+      "mentioned_by": [
+        "דנה"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Watch",
+      "sentiment": "positive",
+      "is_tool": false
+    },
+    {
+      "name": "כלכלת תשומת הלב",
+      "canonical_key": "attention economy",
+      "type": "concept",
+      "notability": 5,
+      "ticker": null,
+      "one_liner": "הקשב שלך הוא המוצר",
+      "context": "כלכלת תשומת הלב עלה בשיחה על הקשב שלך הוא המוצר",
+      "mentioned_by": [
+        "נועם",
+        "דנה"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "אפקט הרשת ההפוך",
+      "canonical_key": "reverse network effect",
+      "type": "concept",
+      "notability": 4,
+      "ticker": null,
+      "one_liner": "לפעמים יותר משתמשים זה גרוע יותר",
+      "context": "אפקט הרשת ההפוך עלה בשיחה על לפעמים יותר משתמשים ",
+      "mentioned_by": [
+        "דנה"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "חוב טכני",
+      "canonical_key": "technical debt",
+      "type": "concept",
+      "notability": 4,
+      "ticker": null,
+      "one_liner": "ריבית דריבית על החלטות גרועות",
+      "context": "חוב טכני עלה בשיחה על ריבית דריבית על החלט",
+      "mentioned_by": [
+        "יובל",
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "דחיסת שוליים",
+      "canonical_key": "margin compression",
+      "type": "concept",
+      "notability": 4,
+      "ticker": null,
+      "one_liner": "כשהרווח נשחק משני הצדדים",
+      "context": "דחיסת שוליים עלה בשיחה על כשהרווח נשחק משני הצ",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "שוליים",
+      "canonical_key": "margins",
+      "type": "book",
+      "notability": 4,
+      "ticker": null,
+      "one_liner": "על מה שנשאר אחרי שהכול נמכר",
+      "context": "שוליים עלה בשיחה על על מה שנשאר אחרי שהכ",
+      "mentioned_by": [
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Read",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "סל המוליכים",
+      "canonical_key": "semi basket",
+      "type": "stock",
+      "notability": 4,
+      "ticker": "SEMIB",
+      "one_liner": "חשיפה רחבה לשבבים",
+      "context": "סל המוליכים עלה בשיחה על חשיפה רחבה לשבבים",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Watch",
+      "sentiment": "negative",
+      "is_tool": false
+    }
+  ]
+}
