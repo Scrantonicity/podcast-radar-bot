@@ -1,0 +1,11 @@
+[Unit]
+Description=Run podcast-radar-bot weekly
+
+[Timer]
+# Weekly schedule with an explicit timezone (handles DST). Requires systemd >= 240.
+# Edit the day/time/zone to match when your show publishes.
+OnCalendar=Fri *-*-* 09:00:00 Asia/Jerusalem
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,26 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      # Offline suite only — no API keys. Guardrail invariants + the observatory,
+      # entity-match, resolver, and transcribe-resume unit tests. test_bridge.main()
+      # is a live-Notion harness and is not collected here.
+      - name: Run tests
+        env:
+          SHOW: demo
+        run: pytest tests/ -q

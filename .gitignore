@@ -1,0 +1,23 @@
+.env
+venv/
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+out_*.txt
+*.mp3
+# Pipeline caches — repo-root only (anchored, so tests/fixtures/**/{extractions,transcripts}
+# stay tracked). The pipeline always writes these at the repo root.
+/extractions/
+/transcripts/
+/feed_cache/
+*.timing.json
+entity_embeddings.json
+backfill_proposals.json
+backfill_proposals.txt
+backfill_run.log
+.DS_Store
+.claude/
+# Built observatory pages (build_observatory.py). The inputs are versioned; the
+# ~500 KB artifact is not.
+dist/

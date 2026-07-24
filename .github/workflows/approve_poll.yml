@@ -1,0 +1,50 @@
+name: approval poller
+
+# Every few minutes: react to the Approve/Reject button taps on the private
+# preview and release approved messages to the channel (copyMessage). Posted guids
+# are recorded in approvals_posted.json and committed back so re-runs never double-post.
+# Requires NO Telegram webhook be set (uses getUpdates).
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: podcast-radar-approval-poller   # single getUpdates consumer; never overlap
+  cancel-in-progress: false
+
+permissions:
+  contents: write                 # commit approvals_posted.json when a post happens
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Poll for approvals
+        env:
+          SHOW: ${{ vars.SHOW || 'demo' }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_ALERT_CHAT_ID: ${{ secrets.TELEGRAM_ALERT_CHAT_ID }}
+          TELEGRAM_APPROVER_ID: ${{ secrets.TELEGRAM_APPROVER_ID }}
+        run: python approval_poller.py
+      - name: Persist posted log if changed
+        run: |
+          # `git add` first so a newly-created (untracked) log is detected too;
+          # `git diff --cached` then reports staged new-or-modified content.
+          git add approvals_posted.json 2>/dev/null || true
+          if git diff --cached --quiet -- approvals_posted.json; then
+            echo "no approvals to persist"
+          else
+            git config user.name "podcast-radar-bot"
+            git config user.email "bot@users.noreply.github.com"
+            git commit -m "chore: record channel-posted approvals [skip ci]"
+            git push
+          fi

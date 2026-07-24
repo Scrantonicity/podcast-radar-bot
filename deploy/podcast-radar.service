@@ -1,0 +1,12 @@
+[Unit]
+Description=podcast-radar-bot — process new episodes
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# Adjust WorkingDirectory + ExecStart paths to wherever you put the project.
+WorkingDirectory=/opt/podcast-radar-bot
+ExecStart=/opt/podcast-radar-bot/venv/bin/python /opt/podcast-radar-bot/main.py
+# main.py reads .env (incl. SHOW=) from the working directory.
+TimeoutStartSec=3600

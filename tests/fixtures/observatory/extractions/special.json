@@ -1,0 +1,121 @@
+{
+  "episode": {
+    "number": null,
+    "title": "פרק מיוחד ללא מספר",
+    "headline": "מיוחד: בלי מספר",
+    "date": "2025-02-14",
+    "duration": "39:00",
+    "audio_url": "https://example.com/audio/special.mp3",
+    "youtube_url": "https://example.com/yt/special",
+    "spotify_url": null,
+    "apple_url": "https://example.com/apple/special",
+    "guid": "special"
+  },
+  "summary": "סיכום לדוגמה לפרק 7. הכול מומצא לצורך בדיקות.",
+  "headline": "מיוחד: בלי מספר",
+  "entities": [
+    {
+      "name": "הודו",
+      "canonical_key": "india",
+      "type": "place",
+      "notability": 3,
+      "ticker": null,
+      "one_liner": "צמיחה",
+      "context": "הודו עלה בשיחה על צמיחה",
+      "mentioned_by": [
+        "דנה"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Explore",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "קנג׳י אישיקווה",
+      "canonical_key": "kenji ishikawa",
+      "type": "person",
+      "notability": 1,
+      "ticker": null,
+      "one_liner": "ארכיטקט",
+      "context": "קנג׳י אישיקווה עלה בשיחה על ארכיטקט",
+      "mentioned_by": [
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Follow",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "אורביט לאבס",
+      "canonical_key": "orbit labs",
+      "type": "company",
+      "notability": 4,
+      "ticker": "ORBT",
+      "one_liner": "לוויינים קטנים",
+      "context": "אורביט לאבס עלה בשיחה על לוויינים קטנים",
+      "mentioned_by": [
+        "דנה",
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Watch",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "חוב טכני",
+      "canonical_key": "technical debt",
+      "type": "concept",
+      "notability": 4,
+      "ticker": null,
+      "one_liner": "ריבית דריבית",
+      "context": "חוב טכני עלה בשיחה על ריבית דריבית",
+      "mentioned_by": [
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "כלכלת תשומת הלב",
+      "canonical_key": "attention economy",
+      "type": "concept",
+      "notability": 5,
+      "ticker": null,
+      "one_liner": "הקשב הוא המוצר",
+      "context": "כלכלת תשומת הלב עלה בשיחה על הקשב הוא המוצר",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "שוליים",
+      "canonical_key": "margins",
+      "type": "book",
+      "notability": 4,
+      "ticker": null,
+      "one_liner": "מה שנשאר",
+      "context": "שוליים עלה בשיחה על מה שנשאר",
+      "mentioned_by": [
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Read",
+      "sentiment": "neutral",
+      "is_tool": false
+    }
+  ]
+}

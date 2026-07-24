@@ -1,0 +1,172 @@
+{
+  "episode": {
+    "number": 3,
+    "title": "הפרק השלישי",
+    "headline": "כשהכלל נאכף בקוד",
+    "date": "2025-01-20",
+    "duration": "1:04:00",
+    "audio_url": "https://example.com/audio/ep3.mp3",
+    "youtube_url": "https://example.com/yt/ep3",
+    "spotify_url": null,
+    "apple_url": "https://example.com/apple/ep3",
+    "guid": "ep3"
+  },
+  "summary": "סיכום לדוגמה לפרק 3. הכול מומצא לצורך בדיקות.",
+  "headline": "כשהכלל נאכף בקוד",
+  "entities": [
+    {
+      "name": "סין",
+      "canonical_key": "china",
+      "type": "place",
+      "notability": 4,
+      "ticker": null,
+      "one_liner": "חוזרת שוב",
+      "context": "סין עלה בשיחה על חוזרת שוב",
+      "mentioned_by": [
+        "נועם",
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Explore",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "גרמניה",
+      "canonical_key": "germany",
+      "type": "place",
+      "notability": 2,
+      "ticker": null,
+      "one_liner": "התעשייה הכבדה של אירופה",
+      "context": "גרמניה עלה בשיחה על התעשייה הכבדה של איר",
+      "mentioned_by": [
+        "דנה"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Explore",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "הלנה ווס",
+      "canonical_key": "helena voss",
+      "type": "person",
+      "notability": 3,
+      "ticker": null,
+      "one_liner": "אנליסטית <script>alert('xss')</script> אנרגיה",
+      "context": "הלנה ווס עלה בשיחה על אנליסטית <script>ale",
+      "mentioned_by": [
+        "דנה"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Follow",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "פייבר־קור",
+      "canonical_key": "fiber core",
+      "type": "company",
+      "notability": 4,
+      "ticker": "FBRC",
+      "one_liner": "סיבים אופטיים לתעשייה",
+      "context": "פייבר־קור עלה בשיחה על סיבים אופטיים לתעשיי",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": "javascript:alert(1)",
+      "timestamp": null,
+      "action": "Watch",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "ממשל אלגוריתמי",
+      "canonical_key": "algorithmic governance",
+      "type": "concept",
+      "notability": 3,
+      "ticker": null,
+      "one_liner": "כשהכלל נאכף בקוד",
+      "context": "ממשל אלגוריתמי עלה בשיחה על כשהכלל נאכף בקוד",
+      "mentioned_by": [
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "הון סבלני",
+      "canonical_key": "patient capital",
+      "type": "concept",
+      "notability": 3,
+      "ticker": null,
+      "one_liner": "כסף שיודע לחכות",
+      "context": "הון סבלני עלה בשיחה על כסף שיודע לחכות",
+      "mentioned_by": [
+        "דנה"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "איך נבנו הגשרים",
+      "canonical_key": "how bridges were built",
+      "type": "book",
+      "notability": 4,
+      "ticker": null,
+      "one_liner": "הנדסה כסיפור חברתי",
+      "context": "איך נבנו הגשרים עלה בשיחה על הנדסה כסיפור חברתי",
+      "mentioned_by": [
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Read",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "על קצב וריבית",
+      "canonical_key": "on tempo and interest",
+      "type": "article",
+      "notability": 4,
+      "ticker": null,
+      "one_liner": "מאמר קצר על מדיניות מוניטרית",
+      "context": "על קצב וריבית עלה בשיחה על מאמר קצר על מדיניות ",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": "https://example.com/article1",
+      "timestamp": null,
+      "action": "Read",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "קרן הרכבות",
+      "canonical_key": "rail fund",
+      "type": "stock",
+      "notability": 3,
+      "ticker": "RAILF",
+      "one_liner": "תשתית משעממת ורווחית",
+      "context": "קרן הרכבות עלה בשיחה על תשתית משעממת ורווחית",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Watch",
+      "sentiment": "neutral",
+      "is_tool": false
+    }
+  ]
+}

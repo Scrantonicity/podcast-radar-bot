@@ -1,0 +1,172 @@
+{
+  "episode": {
+    "number": 8,
+    "title": "הפרק השמיני",
+    "headline": "סגירת מעגל",
+    "date": "2025-02-17",
+    "duration": "1:08:15",
+    "audio_url": "https://example.com/audio/ep8.mp3",
+    "youtube_url": "https://example.com/yt/ep8",
+    "spotify_url": null,
+    "apple_url": "https://example.com/apple/ep8",
+    "guid": "ep8"
+  },
+  "summary": "סיכום לדוגמה לפרק 8. הכול מומצא לצורך בדיקות.",
+  "headline": "סגירת מעגל",
+  "entities": [
+    {
+      "name": "ישראל",
+      "canonical_key": "israel",
+      "type": "place",
+      "notability": 3,
+      "ticker": null,
+      "one_liner": "סגירת מעגל",
+      "context": "ישראל עלה בשיחה על סגירת מעגל",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Explore",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "גרמניה",
+      "canonical_key": "germany",
+      "type": "place",
+      "notability": 2,
+      "ticker": null,
+      "one_liner": "תעשייה כבדה",
+      "context": "גרמניה עלה בשיחה על תעשייה כבדה",
+      "mentioned_by": [
+        "דנה"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Explore",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "הלנה ווס",
+      "canonical_key": "helena voss",
+      "type": "person",
+      "notability": 3,
+      "ticker": null,
+      "one_liner": "אנליסטית אנרגיה",
+      "context": "הלנה ווס עלה בשיחה על אנליסטית אנרגיה",
+      "mentioned_by": [
+        "דנה",
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Follow",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "הליוס",
+      "canonical_key": "helios energy",
+      "type": "company",
+      "notability": 3,
+      "ticker": "HLOS",
+      "one_liner": "סולארי",
+      "context": "הליוס עלה בשיחה על סולארי",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Watch",
+      "sentiment": "positive",
+      "is_tool": false
+    },
+    {
+      "name": "תמחור דינמי",
+      "canonical_key": "dynamic pricing",
+      "type": "concept",
+      "notability": 4,
+      "ticker": null,
+      "one_liner": "מחיר משתנה",
+      "context": "תמחור דינמי עלה בשיחה על מחיר משתנה",
+      "mentioned_by": [
+        "דנה"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "דחיסת שוליים",
+      "canonical_key": "margin compression",
+      "type": "concept",
+      "notability": 4,
+      "ticker": null,
+      "one_liner": "רווח נשחק",
+      "context": "דחיסת שוליים עלה בשיחה על רווח נשחק",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "הון סבלני",
+      "canonical_key": "patient capital",
+      "type": "concept",
+      "notability": 3,
+      "ticker": null,
+      "one_liner": "כסף שמחכה",
+      "context": "הון סבלני עלה בשיחה על כסף שמחכה",
+      "mentioned_by": [
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Learn",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "איך נבנו הגשרים",
+      "canonical_key": "how bridges were built",
+      "type": "book",
+      "notability": 4,
+      "ticker": null,
+      "one_liner": "הנדסה חברתית",
+      "context": "איך נבנו הגשרים עלה בשיחה על הנדסה חברתית",
+      "mentioned_by": [
+        "יובל"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Read",
+      "sentiment": "neutral",
+      "is_tool": false
+    },
+    {
+      "name": "סל המוליכים",
+      "canonical_key": "semi basket",
+      "type": "stock",
+      "notability": 4,
+      "ticker": "SEMIB",
+      "one_liner": "שבבים",
+      "context": "סל המוליכים עלה בשיחה על שבבים",
+      "mentioned_by": [
+        "נועם"
+      ],
+      "link": null,
+      "timestamp": null,
+      "action": "Watch",
+      "sentiment": "neutral",
+      "is_tool": false
+    }
+  ]
+}
