@@ -78,7 +78,7 @@ def _strip_iso(s):
     return s.replace("⁨", "").replace("⁩", "")
 
 
-def test_telegram_format():
+def check_telegram_format():
     """Pure-function checks on the redesigned Telegram message (no network).
 
     Types are LOWERCASE (matching the extraction contract). Sections are merged:
@@ -215,10 +215,16 @@ def test_telegram_format():
     return ok
 
 
+def test_telegram_format():
+    """pytest entry point: fail the suite if any format check regresses. The script
+    harness (main) calls check_telegram_format() directly for its exit code."""
+    assert check_telegram_format()
+
+
 def main():
     client = nb._client()
 
-    tg_ok = test_telegram_format()
+    tg_ok = check_telegram_format()
 
     print("== Step 0: ensure 'Recommended by' is multi_select ==")
     try:
