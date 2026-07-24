@@ -163,8 +163,8 @@ Set the active show in `.env`:  `SHOW=mypodcast`
 
 1. **Duplicate the template.** Open the template and click **Duplicate** (top-right) into
    your own workspace:
-   - English: **https://www.notion.so/Podcast-Radar-Template-English-3a74824966ba81b1b76fee717032eb32**
-   - Hebrew: **https://www.notion.so/3a74824966ba814bb633c51e4ccc70ac**
+   - English: **https://maddening-robe-93b.notion.site/3a74824966ba81b1b76fee717032eb32?v=3a74824966ba80899a43000ccbba0922**
+   - Hebrew: **https://maddening-robe-93b.notion.site/3a74824966ba814bb633c51e4ccc70ac?v=3a74824966ba801eb9c7000cf455994e**
 
    It contains an **Episodes** database and an **Entities** database, already related, with
    the exact property names and select options the bot writes to, plus the **Tools** and

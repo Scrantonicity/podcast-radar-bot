@@ -132,8 +132,8 @@ Python 3.12, and accounts / keys for:
 - **Google Gemini** — `GOOGLE_API_KEY` (entity extraction). Model via `EXTRACTION_MODEL`.
 - **Notion** — `NOTION_TOKEN` + two databases (Episodes + Entities) and their four
   DB / data-source IDs. Don't build the databases by hand — **duplicate a ready-made
-  template** ([English](https://www.notion.so/Podcast-Radar-Template-English-3a74824966ba81b1b76fee717032eb32)
-  · [עברית](https://www.notion.so/3a74824966ba814bb633c51e4ccc70ac)) and let
+  template** ([English](https://maddening-robe-93b.notion.site/3a74824966ba81b1b76fee717032eb32?v=3a74824966ba80899a43000ccbba0922)
+  · [עברית](https://maddening-robe-93b.notion.site/3a74824966ba814bb633c51e4ccc70ac?v=3a74824966ba801eb9c7000cf455994e)) and let
   `python scripts/notion_ids.py` fetch the two data-source IDs for you.
 - **Telegram** — a bot (`TELEGRAM_BOT_TOKEN` from @BotFather) added to your channel
   **as an admin with "Post Messages"**, plus `TELEGRAM_CHAT_ID`. For the approval
