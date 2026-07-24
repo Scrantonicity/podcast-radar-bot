@@ -32,6 +32,12 @@ SHOW = ShowConfig(
 
     db_link="",                                     # TODO: public link to your Notion DB
 
+    # --- taxonomy (optional) ---
+    # The default 8 entity types (person/company/stock/place/concept/book/article/other)
+    # suit most shows. To adapt them to a different kind of podcast, set `entity_types`
+    # here AND update the allowed-types list in prompt.txt to match — see ONBOARDING.md
+    # Step 4. A custom type can map to a Notion Action via `action_by_type`.
+
     # Telegram digest layout — sections in display order, one icon per heading.
     # Types not listed in any section stay in Notion but not the digest.
     tg_sections=(
