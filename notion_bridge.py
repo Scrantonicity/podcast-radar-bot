@@ -559,7 +559,7 @@ def _context_bullet(episode_number, context):
 def _upsert_entity(client, ent, index, episode_page_id, episode_date, ep_numbers=None,
                    has_notability=False, episode_number=None, has_context=False,
                    has_action=False, has_sentiment=False, has_learn=False,
-                   has_aliases=False):
+                   has_aliases=False, has_guest=False):
     ep_numbers = ep_numbers or {}
     key = ent["canonical_key"]
     mentioned = [m for m in (ent.get("mentioned_by") or [])]
@@ -605,6 +605,10 @@ def _upsert_entity(client, ent, index, episode_page_id, episode_date, ep_numbers
             props["Action"] = {"select": {"name": ent["action"]}}
         if has_sentiment and ent.get("sentiment"):
             props["Sentiment"] = {"select": {"name": ent["sentiment"]}}
+        # Guest flag: promote-only. Once a person has guested they stay flagged, so a
+        # later episode that merely DISCUSSES them (is_guest false) must not clear it.
+        if has_guest and ent.get("is_guest"):
+            props["Guest"] = {"checkbox": True}
         # Learn deep-link: refresh each episode so it reflects the latest one-liner.
         if has_learn and ent.get("name"):
             props["Learn"] = {"url": _learn_url(ent["name"], ent.get("one_liner"),
@@ -669,6 +673,8 @@ def _upsert_entity(client, ent, index, episode_page_id, episode_date, ep_numbers
         props["Action"] = {"select": {"name": ent["action"]}}
     if has_sentiment and ent.get("sentiment"):
         props["Sentiment"] = {"select": {"name": ent["sentiment"]}}
+    if has_guest:
+        props["Guest"] = {"checkbox": bool(ent.get("is_guest"))}
     if has_learn and ent.get("name"):
         props["Learn"] = {"url": _learn_url(ent["name"], ent.get("one_liner"),
                                             ent.get("type"), ent.get("context"))}
@@ -742,12 +748,14 @@ def process_episode(data, transcript_path=None, client=None):
     has_sentiment = _has_property(client, config.NOTION_ENTITIES_DS_ID, "Sentiment")
     has_learn = _ensure_learn_property(client)
     has_aliases = _has_property(client, config.NOTION_ENTITIES_DS_ID, "Aliases")
+    has_guest = _has_property(client, config.NOTION_ENTITIES_DS_ID, "Guest")
     entity_page_ids = []
     for ent in entities:
         pid = _upsert_entity(client, ent, index, episode_page_id, ep.get("date"),
                              ep_numbers, has_notability, ep.get("number"), has_context,
                              has_action=has_action, has_sentiment=has_sentiment,
-                             has_learn=has_learn, has_aliases=has_aliases)
+                             has_learn=has_learn, has_aliases=has_aliases,
+                             has_guest=has_guest)
         entity_page_ids.append(pid)
 
     # No explicit Episode -> Entities write. The relation is two-way

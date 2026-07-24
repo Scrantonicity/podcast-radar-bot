@@ -82,6 +82,14 @@ For each entity:
   explicit bullish stance -> positive; explicit bearish -> negative.
 - is_tool: boolean. true only when the entity is clearly software/a product you can
   actually try or use (Notion, ChatGPT). Otherwise false.
+- is_guest: boolean. true ONLY when this entity (type=person) is the episode's actual
+  in-studio guest — a real person who appears and speaks as the interviewee (their voice
+  is one of the "{{GUEST_LABEL}}" speakers in the transcript). Otherwise false. Someone
+  merely TALKED ABOUT (a CEO, a figure in the news) is NOT a guest -> is_guest=false, even
+  at high notability. Most entities are is_guest=false; there is usually at most one guest.
+  When an episode HAS a guest you MUST extract them as a person entity with is_guest=true —
+  never omit them, even if they are not otherwise a public figure (an explicit exception to
+  the "no private individuals" exclusion rule).
 - action: leave null — this field is set in code.
 
 Hallucination control: only entities explicitly mentioned. Do not add related or

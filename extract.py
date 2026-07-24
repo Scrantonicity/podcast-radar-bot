@@ -71,6 +71,11 @@ ACTION_BY_TYPE = {
     "stock": "To Watch", "company": "To Research", "person": "To Look Up",
     "place": None, "other": None,
 }
+# A show with a custom taxonomy can map its own types to an Action (or override a
+# default) via config.action_by_type — so adding an entity type never needs an
+# engine edit. Overlaid on top of the defaults above.
+if SHOW.action_by_type:
+    ACTION_BY_TYPE = {**ACTION_BY_TYPE, **SHOW.action_by_type}
 VALID_SENTIMENTS = {"positive", "negative", "neutral"}
 # The active show's regular hosts (short forms) + the guest label. mentioned_by is
 # constrained to these. SINGLE SOURCE OF TRUTH: SHOW.hosts (shows/<name>/config.py).
@@ -137,15 +142,20 @@ CONTRACT_SCHEMA = {
                     "link": {"type": "string", "nullable": True},
                     "timestamp": {"type": "string", "nullable": True},
                     # action is OVERWRITTEN in _validate from the type mapping; the
-                    # model's value is ignored. sentiment + is_tool are real inputs.
+                    # model's value is ignored. sentiment + is_tool + is_guest are
+                    # real inputs.
                     "action": {"type": "string", "nullable": True},
                     "sentiment": {"type": "string"},
                     "is_tool": {"type": "boolean"},
+                    # is_guest: true when this entity IS the episode's in-studio
+                    # guest (a real person who appears/speaks as the interviewee),
+                    # not merely someone discussed. Stored as a standalone flag.
+                    "is_guest": {"type": "boolean"},
                 },
                 "required": [
                     "name", "canonical_key", "type", "notability", "ticker",
                     "one_liner", "context", "mentioned_by", "link", "timestamp",
-                    "action", "sentiment", "is_tool",
+                    "action", "sentiment", "is_tool", "is_guest",
                 ],
             },
         },
@@ -219,6 +229,9 @@ def _validate(obj):
         # action: deterministic from type; is_tool (model boolean) overrides to "Tool".
         # The model's own "action" value is ignored — code is the source of truth.
         e["action"] = "Tool" if bool(e.get("is_tool")) else ACTION_BY_TYPE.get(e["type"])
+        # is_guest: standalone flag (unlike is_tool it does NOT fold into action).
+        # Coerce to a real bool so the Notion checkbox always gets a definite value.
+        e["is_guest"] = bool(e.get("is_guest"))
     return obj
 
 

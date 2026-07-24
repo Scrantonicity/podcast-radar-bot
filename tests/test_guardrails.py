@@ -106,6 +106,84 @@ class HostSponsorFilterGuardrail(unittest.TestCase):
             self.assertIsNone(extract.META_CONTEXT_RE)
 
 
+class GuestFlagGuardrail(unittest.TestCase):
+    """is_guest is a standalone stored flag: coerced to a real bool, never folded
+    into action (unlike is_tool), and promote-only on the Notion write so a later
+    episode that merely DISCUSSES a past guest can't clear their Guest checkbox."""
+
+    def setUp(self):
+        # _upsert_entity sleeps WRITE_DELAY after each mocked write; zero it out.
+        self._wd = nb.WRITE_DELAY
+        nb.WRITE_DELAY = 0
+
+    def tearDown(self):
+        nb.WRITE_DELAY = self._wd
+
+    def _entity(self, **over):
+        e = {"name": "יונתן אריאל", "canonical_key": "yonatan-ariel", "type": "person",
+             "notability": 3, "mentioned_by": [], "ticker": None, "one_liner": None,
+             "context": None, "link": None, "timestamp": None, "action": None,
+             "sentiment": "neutral", "is_tool": False}
+        e.update(over)
+        return e
+
+    def test_validate_coerces_is_guest_to_bool(self):
+        obj = {"summary": "s", "headline": "h", "entities": [
+            self._entity(is_guest=True),
+            self._entity(canonical_key="k2"),          # is_guest absent -> False
+        ]}
+        out = extract._validate(obj)
+        self.assertIs(out["entities"][0]["is_guest"], True)
+        self.assertIs(out["entities"][1]["is_guest"], False)
+
+    def test_is_guest_does_not_fold_into_action(self):
+        # is_tool overrides action to "Tool"; is_guest must NOT touch action.
+        obj = {"summary": "s", "headline": "h", "entities": [
+            self._entity(type="person", is_guest=True)]}
+        out = extract._validate(obj)
+        self.assertNotEqual(out["entities"][0]["action"], "Tool")
+
+    def _cur(self, page_id, episode_page_id):
+        # Minimal cache row shaped like _load_entities_index output.
+        return {"page_id": page_id, "episodes": {episode_page_id},
+                "recommended": set(), "mentions": 1, "notability": 3,
+                "has_link": True, "has_oneliner": True, "has_ticker": True,
+                "aliases": [], "name": "יונתן אריאל"}
+
+    def test_update_is_promote_only(self):
+        client = MagicMock()
+        key = "yonatan-ariel"
+        # Already linked to this episode -> no mention bump, no body append.
+        index = {key: self._cur("pg-1", "ep-1")}
+        nb._upsert_entity(client, self._entity(is_guest=False), index, "ep-1", None,
+                          has_guest=True)
+        _, kwargs = client.pages.update.call_args
+        self.assertNotIn("Guest", kwargs["properties"])   # false must NOT clear
+
+        client.reset_mock()
+        index = {key: self._cur("pg-1", "ep-1")}
+        nb._upsert_entity(client, self._entity(is_guest=True), index, "ep-1", None,
+                          has_guest=True)
+        _, kwargs = client.pages.update.call_args
+        self.assertEqual(kwargs["properties"]["Guest"], {"checkbox": True})
+
+    def test_create_writes_definite_bool(self):
+        client = MagicMock()
+        client.pages.create.return_value = {"id": "new-pg"}
+        nb._upsert_entity(client, self._entity(is_guest=False), {}, "ep-1", None,
+                          has_guest=True)
+        _, kwargs = client.pages.create.call_args
+        self.assertEqual(kwargs["properties"]["Guest"], {"checkbox": False})
+
+    def test_guest_absent_when_ds_lacks_property(self):
+        client = MagicMock()
+        client.pages.create.return_value = {"id": "new-pg"}
+        nb._upsert_entity(client, self._entity(is_guest=True), {}, "ep-1", None,
+                          has_guest=False)
+        _, kwargs = client.pages.create.call_args
+        self.assertNotIn("Guest", kwargs["properties"])
+
+
 class ModelSingleSourceGuardrail(unittest.TestCase):
     """The extraction model resolves from config.EXTRACTION_MODEL only."""
 
