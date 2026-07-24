@@ -183,6 +183,16 @@ class GuestFlagGuardrail(unittest.TestCase):
         _, kwargs = client.pages.create.call_args
         self.assertNotIn("Guest", kwargs["properties"])
 
+    def test_merge_ors_is_guest_across_duplicates(self):
+        # Same canonical_key twice in one episode, is_guest=False FIRST: the merge
+        # must OR the flag so the guest isn't silently dropped (matches the
+        # notability strongest-signal rule).
+        ents = [self._entity(canonical_key="k", is_guest=False),
+                self._entity(canonical_key="k", is_guest=True)]
+        merged = extract._merge_within_episode(ents)
+        self.assertEqual(len(merged), 1)
+        self.assertIs(merged[0]["is_guest"], True)
+
 
 class ModelSingleSourceGuardrail(unittest.TestCase):
     """The extraction model resolves from config.EXTRACTION_MODEL only."""

@@ -248,6 +248,10 @@ def _merge_within_episode(entities):
             cur["mentioned_by"] = [m for m in HOSTS if m in merged]
             # notability: keep the strongest signal across duplicates.
             cur["notability"] = max(cur.get("notability") or 0, e.get("notability") or 0)
+            # is_guest: OR across duplicates (same strongest-signal rule). A guest
+            # folded onto a passing mention of the same person must stay flagged;
+            # the promote-only Notion write can't recover a dropped True later.
+            cur["is_guest"] = bool(cur.get("is_guest")) or bool(e.get("is_guest"))
             # fill empties from the duplicate
             for f in ("ticker", "one_liner", "context", "link", "timestamp"):
                 if not cur.get(f) and e.get(f):
