@@ -131,7 +131,10 @@ Python 3.12, and accounts / keys for:
 - **Speechmatics** — `SPEECHMATICS_API_KEY` (speech-to-text; ~100 languages).
 - **Google Gemini** — `GOOGLE_API_KEY` (entity extraction). Model via `EXTRACTION_MODEL`.
 - **Notion** — `NOTION_TOKEN` + two databases (Episodes + Entities) and their four
-  DB / data-source IDs.
+  DB / data-source IDs. Don't build the databases by hand — **duplicate a ready-made
+  template** ([English](https://www.notion.so/Podcast-Radar-Template-English-3a74824966ba81b1b76fee717032eb32)
+  · [עברית](https://www.notion.so/3a74824966ba814bb633c51e4ccc70ac)) and let
+  `python scripts/notion_ids.py` fetch the two data-source IDs for you.
 - **Telegram** — a bot (`TELEGRAM_BOT_TOKEN` from @BotFather) added to your channel
   **as an admin with "Post Messages"**, plus `TELEGRAM_CHAT_ID`. For the approval
   flow, also a private chat (`TELEGRAM_ALERT_CHAT_ID`) and your user id
@@ -157,6 +160,15 @@ python main.py --episode 1          # newest episode, end-to-end
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Add Your Own Podcast
+
+**The easy path — let an AI coding agent do it.** Point Claude Code / Codex / Gemini CLI
+(or read it yourself) at **[ONBOARDING.md](ONBOARDING.md)**: it interviews you about the
+show, finds the RSS feed, reads one sample episode to **derive a show-specific entity
+taxonomy** (a markets show tracks stocks and books; a history show tracks people and
+places), scaffolds `shows/<name>/`, and walks the Notion + key wiring end to end. The
+entity types adapt per show — the engine holds no taxonomy of its own.
+
+**The manual path** is three files:
 
 ```bash
 cp -r shows/_template shows/mypodcast
@@ -219,6 +231,12 @@ Caches (`transcripts/`, `extractions/`, keyed by episode GUID) are checkpoints:
 re-running an episode reuses them instead of paying for STT / the LLM again. Every
 non-`--episode` run is capped (`MAX_EPISODES_PER_RUN`) so a feed glitch can't fan
 out into many paid jobs.
+
+**What it costs.** Transcription is the only line item that adds up: Speechmatics batch
+runs about **$0.60 for a one-hour episode** (measured: ~$40 for a 65-episode
+back-catalogue). Gemini Flash extraction is negligible; Notion and Telegram are free.
+So a weekly show is a few dollars a year — the one place to be deliberate is a full
+`--backfill`, which the per-run cap already guards.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -325,6 +343,7 @@ shows/demo/    shows/_template/      # per-podcast config + prompt + strings
 scripts/       # operator utilities (see below)
 tests/         # guardrails, entity_match, resolve, transcribe_resume, bridge
 deploy/  .github/workflows/          # systemd + GitHub Actions
+ONBOARDING.md         # add-a-new-podcast playbook (agent- or human-followable)
 RELIABILITY.md        # getting off GitHub cron: external trigger + dead-man alert
 OBSERVATORY.md        # guide for authoring your show's observatory theme
 ```
@@ -370,6 +389,8 @@ week's episode wasn't processed in time, and stays silent otherwise.
 
 ## Roadmap
 
+- [ ] **Local speech-to-text** via [faster-whisper](https://github.com/SYSTRAN/faster-whisper) — a free, offline STT backend for users who'd rather not pay per episode
+- [ ] **Pluggable extraction LLM** — the pipeline is Gemini-only today; abstract the extractor so Claude / GPT / others drop in via config
 - [ ] Soniox as an alternate STT backend (`SONIOX_API_KEY` is already scaffolded in `.env.example`)
 
 See the [open issues](https://github.com/Scrantonicity/podcast-radar-bot/issues) for a
