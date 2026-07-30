@@ -227,8 +227,8 @@ python main.py --no-telegram    # suppress the channel post (testing)
    unattended. Good for a VPS timer.
 2. **Approval-gated (recommended)** — `auto_review.py` writes Notion and sends the
    digest to your **private** chat with Approve / Reject buttons; nothing reaches
-   the public channel until you tap Approve (a 5-minute `approval_poller.py` cron
-   releases it). This is the safe default the CI workflow uses.
+   the public channel until you tap Approve (`approval_poller.py`, run on a short
+   cron, releases it). This is the safe default the deployment workflows use.
 
 Caches (`transcripts/`, `extractions/`, keyed by episode GUID) are checkpoints:
 re-running an episode reuses them instead of paying for STT / the LLM again. Every
@@ -345,7 +345,8 @@ build_observatory.py  observatory/    # the per-show statistics page
 shows/demo/    shows/_template/      # per-podcast config + prompt + strings
 scripts/       # operator utilities (see below)
 tests/         # guardrails, entity_match, resolve, transcribe_resume, bridge
-deploy/  .github/workflows/          # systemd + GitHub Actions
+deploy/  docs/workflows/             # systemd units + parked production workflows
+.github/workflows/     # CI that runs here: tests + observatory (no secrets needed)
 ONBOARDING.md         # add-a-new-podcast playbook (agent- or human-followable)
 RELIABILITY.md        # getting off GitHub cron: external trigger + dead-man alert
 OBSERVATORY.md        # guide for authoring your show's observatory theme
@@ -376,10 +377,14 @@ Not part of the weekly run — operator tools:
 
 ## Deployment
 
-- **GitHub Actions** — `.github/workflows/pipeline.yml` (manual dispatch: `auto` /
-  `latest` / `episode` / `preview`, plus a weekly schedule) and
-  `approve_poll.yml` (the 5-minute approval poller). Keys come from repo
-  **secrets**; `SHOW` and `EXTRACTION_MODEL` from repo **variables**.
+- **GitHub Actions** — `docs/workflows/pipeline.yml` (manual dispatch: `auto` /
+  `latest` / `episode` / `preview`, plus a weekly schedule), `approve_poll.yml`
+  (the approval poller) and `watchdog.yml`. They ship **parked**: this blueprint
+  repo carries no API keys, so running them here would only fail. Copy them into
+  `.github/workflows/` and add your keys as repo **secrets** (`SHOW` and
+  `EXTRACTION_MODEL` as repo **variables**) — see
+  [docs/workflows/README.md](docs/workflows/README.md). The workflows that *do* run
+  here are `tests` and `observatory`, both credential-free.
 - **systemd on a VPS** — `deploy/` (`podcast-radar.service` + `.timer`, plus
   `setup.sh`). Edit the schedule/timezone in the `.timer` to match your show. See
   [deploy/README.md](deploy/README.md).

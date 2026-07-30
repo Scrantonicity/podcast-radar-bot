@@ -269,7 +269,8 @@ it won't pay for STT or the LLM again.
 - **Approval-gated posting (recommended):** `auto_review.py` writes Notion and sends the
   digest to your private chat with Approve/Reject buttons; nothing hits the public channel
   until you tap Approve. See the README's *Usage* and *Deployment* sections.
-- **Scheduling:** GitHub Actions (`.github/workflows/pipeline.yml`) or a systemd timer
+- **Scheduling:** GitHub Actions (`docs/workflows/pipeline.yml` — copy it into
+  `.github/workflows/` first; see [docs/workflows/README.md](docs/workflows/README.md)) or a systemd timer
   (`deploy/`). Read **[RELIABILITY.md](RELIABILITY.md)** before relying on cron.
 - **Backfill the archive:** `python main.py --backfill` walks every episode oldest→newest,
   rate-limited and resumable. Every non-`--episode` run is capped

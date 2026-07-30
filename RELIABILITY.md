@@ -26,6 +26,13 @@ extraction, or post.
 Replace throughout: `<OWNER>/<REPO>`, `<PROJECT_ID>`, `<REGION>`, `<TZ>`, and the cron
 expressions (match them to when your show publishes).
 
+> **Before any of this works:** the workflow files ship **parked** in `docs/workflows/`,
+> because this blueprint repo holds no API keys. `cp docs/workflows/*.yml
+> .github/workflows/`, commit to your default branch, and set the repo secrets — see
+> [docs/workflows/README.md](docs/workflows/README.md). The `…/workflows/<file>.yml/dispatches`
+> endpoints below resolve a workflow by its path under `.github/workflows/` on the default
+> branch, and return 404 until the files are there.
+
 ## One-time prerequisites
 
 ```bash
@@ -112,8 +119,10 @@ Within seconds a `mode=auto` run should appear under Actions, triggered by
 
 ## Last step — retire the GitHub schedule (only after the above works)
 
-In `.github/workflows/pipeline.yml`, delete the `schedule:` block and the
-`if [ "${{ github.event_name }}" = "schedule" ]` branch. Keep `workflow_dispatch`. The
+The shipped `pipeline.yml` and `approve_poll.yml` still carry their `schedule:` blocks, so
+that a fork works out of the box on GitHub cron alone. Once the external scheduler is proven,
+retire them: in your copy of `.github/workflows/pipeline.yml`, delete the `schedule:` block
+and the `if [ "${{ github.event_name }}" = "schedule" ]` branch. Keep `workflow_dispatch`. The
 external scheduler now owns scheduling: one trigger source, no double-fire. (Optional: drop
 `schedule:` from `approve_poll.yml` too, since job #3 drives it — leaving it as an everyday
 backup is harmless.)
